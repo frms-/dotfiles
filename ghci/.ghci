@@ -3,3 +3,6 @@ let ghciEscapeString arg = "'" ++ concatMap (\c -> if c == '\'' then "'\"'\"'" e
 :def doc    return . (":! hoogle --color --info " ++) . ghciEscapeString
 :set prompt "λ> "
 :set -fobject-code
+:set +s
+:set +t
+:set -XOverloadedStrings

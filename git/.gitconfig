@@ -1,0 +1,35 @@
+# -*- mode: conf; -*-
+[user]
+#       	email 
+#        user 
+
+[color]
+        ui = auto
+        blame = always
+
+[core]
+        editor = vim
+        excludesfile = ~/.gitignore
+
+[alias]
+        st = status
+        ci = commit
+        br = branch
+        co = checkout
+        # all new commits after you fetched, with stats, but excluding merges
+        # Remove a file from the index: git unstage <file>
+        unstage = reset HEAD --
+        last = log -1 HEAD
+      	uc = reset HEAD~1
+	      lol = log --pretty=oneline
+        lod = log --decorate
+[push]
+        default = tracking
+
+[color "diff"]
+#	meta = magenta black
+	header = magenta black
+	commit = yellow black
+	frag = cyan black
+[rerere]
+	enabled = true

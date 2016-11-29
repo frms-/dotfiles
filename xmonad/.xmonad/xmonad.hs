@@ -1,3 +1,4 @@
+
 {-# OPTIONS_GHC -fno-warn-missing-signatures #-}
 import Data.Bits
 import Graphics.X11
@@ -52,9 +53,6 @@ myBorderWidth = 2
 myWorkspaces :: [String]
 myWorkspaces = ["  1  ", "  2  ", "  3  ", "  4  ", "  5  ", "  6  ", "  7  ", "  8  ", "  9  ", "  0  ", "  +  "]
 
--- myTitleFgColor :: String
--- myTitleFgColor = "white"
-
 myLayout = avoidStruts $ smartBorders layouts
   where
     layouts         = tiled ||| full ||| threeCol ||| grid
@@ -99,10 +97,10 @@ main = do p <- spawnPipe "xmobar"
          , keys = \c -> mykeys c `M.union` keys defaultConfig c
          }
     mykeys (XConfig {XMonad.modMask = modm}) = M.fromList $
-                                               [ ((controlMask .|. modm, xK_Right), nextWS)
-                                               , ((controlMask .|. modm, xK_Left),  prevWS)
-                                               , ((modm, xK_g ),   withFocused toggleBorder)
-                                               , ((modm .|. controlMask, xK_space), sendMessage ToggleLayout)
+                                               [ ((controlMask .|. modm, xK_Right), nextWS) -- C-=>
+                                               , ((controlMask .|. modm, xK_Left),  prevWS) -- -=-
+                                               , ((modm, xK_g ),   withFocused toggleBorder) -- mod-g
+                                               , ((modm .|. controlMask, xK_space), sendMessage ToggleLayout) -- mod-space
                                                ] ++
                                                [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
                                                | (key, sc) <- zip [xK_w, xK_e, xK_r, xK_s] [0, 1, 2]
