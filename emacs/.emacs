@@ -2,11 +2,12 @@
 (defconst dot-root (expand-file-name "~/.configuration/emacs/elisp"))
 (defconst emacs-dot-d (expand-file-name "~/.emacs.d"))
 
-(condition-case err
-    (let ((path "~/.configuration/emacs/elisp/lib"))
-      (add-to-list 'custom-theme-load-path path)
-      (load-theme 'zenburn t))
-  (error (message "Failed to load zenburn theme: %s" err)))
+;; (condition-case err
+;;     (let ((path "~/.configuration/emacs/elisp/lib"))
+;;       (add-to-list 'custom-theme-load-path path)
+;;       (load-theme 'zenburn t))
+;;   (error (message "Failed to load zenburn theme: %s" err)))
+
 (defun add-subdirs-to-load-path (base-dir)
   (when (file-directory-p base-dir)
     (let ((dirs (list base-dir)) (filter "/\\.\\{1,2\\}$"))
@@ -18,37 +19,51 @@
 	      (push file dirs))))))))
 
 (add-to-list 'load-path dot-root)
-(add-to-list 'custom-theme-load-path
-             ".configuration/emacs/elisp/lib/emacs-color-theme-solarized/")
 (add-subdirs-to-load-path dot-root)
 (add-subdirs-to-load-path emacs-dot-d)
 
 (delete-dups load-path)
 
+(require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(use-package zenburn-theme
+  :ensure)
+
+;; (require 'diminish)
+;; (require 'bind-key)
+
 (require 'cl)
-(require 'use-package)
 
-(use-package package
-  :defer t
-  :config
-  (progn
-    (add-to-list 'package-archives
-		 '("melpa" . "https://melpa.org/packages/"))
-    (package-initialize)))
+(use-package dired-x)
 
-  (use-package dired-x)
-
-(load-library "funs")
-(load-library "settings")
-(load-library "fm-haskell")
+;(load-library "funs")
+;(load-library "settings")
+;(load-library "fm-haskell")
 ;;(load-library "fm-erlang")
 
+(use-package haskell-mode
+  :ensure)
+
 (use-package browse-kill-ring
+  :ensure
   :config (progn
 	    (browse-kill-ring-default-keybindings)
 	    (setq browse-kill-ring-quit-action 'save-and-restore)))
 
 (use-package autopair
+  :ensure
   :config (progn
 	    (setq autopair-autowrap t)
 	    (add-hook 'c-mode-hook  #'(lambda () autopair-mode))
@@ -129,7 +144,7 @@
  '(horizontal-scroll-bar-mode nil)
  '(package-selected-packages
    (quote
-    (yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode intero idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
+    (autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode intero idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
  '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t))))
  '(scroll-bar-mode nil))
 (custom-set-faces
@@ -146,6 +161,3 @@
 (add-hook 'grep-setup-hook 'my-grep-hook)
 (put 'upcase-region 'disabled nil)
 
-(defadvice split-window-vertically (after rebalance-windows activate)
-  (balance-windows))
-(ad-activate 'split-window-vertically)
