@@ -35,9 +35,6 @@
 (use-package zenburn-theme
   :ensure)
 
-(require 'diminish)
-(require 'bind-key)
-
 (require 'cl)
 
 (use-package dired-x)
