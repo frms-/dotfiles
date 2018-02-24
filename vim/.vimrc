@@ -7,5 +7,7 @@ set ruler		" show the cursor position all the time
 set showmatch
 set background=dark
 set expandtab
-set hlsearch
+" set hlsearch
 inoremap jj <Esc>
+set incsearch
+inoremap <esc> <nop>
