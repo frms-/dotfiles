@@ -48,8 +48,8 @@
 
 (use-package dired-x)
 
-;(load-library "funs")
-;(load-library "settings")
+(load-library "funs")
+(load-library "settings")
 ;(load-library "fm-haskell")
 ;;(load-library "fm-erlang")
 
