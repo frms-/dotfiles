@@ -33,3 +33,6 @@
 	frag = cyan black
 [rerere]
 	enabled = true
+[user]
+	name = Fredrik Malmros
+	email = fredrik.malmros@gmail.com

@@ -10,6 +10,7 @@
 (setq message-log-max 16384)
 (transient-mark-mode t)
 (global-linum-mode t)
+;;(require 'hlinum)
 (hlinum-activate)
 (show-paren-mode t)
 (setq show-paren-delay 0)

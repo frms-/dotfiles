@@ -2,12 +2,6 @@
 (defconst dot-root (expand-file-name "~/.configuration/emacs/elisp"))
 (defconst emacs-dot-d (expand-file-name "~/.emacs.d"))
 
-;; (condition-case err
-;;     (let ((path "~/.configuration/emacs/elisp/lib"))
-;;       (add-to-list 'custom-theme-load-path path)
-;;       (load-theme 'zenburn t))
-;;   (error (message "Failed to load zenburn theme: %s" err)))
-
 (defun add-subdirs-to-load-path (base-dir)
   (when (file-directory-p base-dir)
     (let ((dirs (list base-dir)) (filter "/\\.\\{1,2\\}$"))
@@ -41,23 +35,21 @@
 (use-package zenburn-theme
   :ensure)
 
-;; (require 'diminish)
-;; (require 'bind-key)
+(require 'diminish)
+(require 'bind-key)
 
 (require 'cl)
 
 (use-package dired-x)
-
-;(load-library "funs")
-;(load-library "settings")
-;(load-library "fm-haskell")
-;;(load-library "fm-erlang")
+(use-package hlinum
+  :ensure)
 
 (use-package haskell-mode
   :ensure)
 
 (use-package browse-kill-ring
   :ensure
+  :defer 5
   :config (progn
 	    (browse-kill-ring-default-keybindings)
 	    (setq browse-kill-ring-quit-action 'save-and-restore)))
@@ -105,6 +97,18 @@
                 (setq ibuffer-show-empty-groups nil)
                 (setq ibuffer-default-sorting-mode 'major-mode))))
 
+(use-package win-switch
+  :ensure
+  :bind ("C-x C-o" . win-switch-dispatch)
+  :config (progn
+            (setq win-switch-idle-time 1.4)
+            (setq win-switch-other-window-first nil)))
+
+(load-library "funs")
+(load-library "settings")
+(load-library "fm-haskell")
+;;(load-library "fm-erlang")
+
 (defun x-settings (frame)
   (when (display-graphic-p frame)
     (hl-line-mode t))
@@ -144,7 +148,7 @@
  '(horizontal-scroll-bar-mode nil)
  '(package-selected-packages
    (quote
-    (autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode intero idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
+    (hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
  '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t))))
  '(scroll-bar-mode nil))
 (custom-set-faces
@@ -160,4 +164,13 @@
 
 (add-hook 'grep-setup-hook 'my-grep-hook)
 (put 'upcase-region 'disabled nil)
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
+
 
