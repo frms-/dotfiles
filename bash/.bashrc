@@ -1,32 +1,20 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM="auto"
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
-
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoreboth
-
+export HISTCONTROL=ignoredups:erasedups
+export HISTSIZE=1048576
+export HISTFILESIZE=1048576
+export HISTTIMEFORMAT="%F %T "
+export PROMPT_COMMAND='history -a'
 # append to the history file, don't overwrite it
 shopt -s histappend
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -40,31 +28,6 @@ case "$TERM" in
     xterm|xterm-color|*-256color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    if [[ ${EUID} == 0 ]] ; then
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\h\[\033[01;34m\] \W \$\[\033[00m\] '
-    else
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w \$\[\033[00m\] '
-    fi
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h \w \$ '
-fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -88,9 +51,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
@@ -100,18 +60,27 @@ alias l='ls -CF'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+GIT_PS1_FORMAT="(%.10s)"
+PS1='\[\033[31m\][\t]\[\033[m\][\u@\h]\[\033[32m\] \w`__git_ps1 $GIT_PS1_FORMAT`\[\033[m\]\$ '
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -t 3000 -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
@@ -123,5 +92,69 @@ fi
 if [ -x /usr/bin/mint-fortune ]; then
      /usr/bin/mint-fortune
 fi
+#PATH=/home/frms/.local/bin:$PATH
+
+alias tmux="TERM=screen-256color-bce tmux"
+
+export EDITOR=vim
+
+man() {
+  env LESS_TERMCAP_mb=$'\E[0;103m' \
+  LESS_TERMCAP_md=$'\E[0;93m' \
+  LESS_TERMCAP_me=$'\E[0m' \
+  LESS_TERMCAP_se=$'\E[0m' \
+  LESS_TERMCAP_so=$(tput bold; tput setaf 8; tput setab 3) \
+  LESS_TERMCAP_ue=$'\E[0m' \
+  LESS_TERMCAP_us=$'\E[04;32m' \
+  LESS_TERMCAP_mr=$(tput rev) \
+  LESS_TERMCAP_mh=$(tput dim) \
+  LESS_TERMCAP_ZN=$(tput ssubm) \
+  LESS_TERMCAP_ZV=$(tput rsubm) \
+  LESS_TERMCAP_ZO=$(tput ssupm) \
+  LESS_TERMCAP_ZW=$(tput rsupm) \
+  man "$@"
+}
+
+SSH_AGENT_ENV=$HOME/.ssh/agent-environment
+function start-ssh-agent {
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > $SSH_AGENT_ENV
+    chmod 600 $SSH_AGENT_ENV
+    source $SSH_AGENT_ENV > /dev/null
+}
+
+if [ -f $SSH_AGENT_ENV ] ; then
+    source $SSH_AGENT_ENV > /dev/null
+    ps $SSH_AGENT_PID | grep -q ssh-agent || {
+	start-ssh-agent
+    }
+else
+    start-ssh-agent
+fi
+
+if [ -f ${HOME}/.bashrc-local ]; then
+    . ${HOME}/.bashrc-local
+fi
+
+
+############### Locale settings ##############
+export LANG=en_DK.UTF-8
+export LANGUAGE=en_US
+export LC_CTYPE="en_DK.UTF-8"
+export LC_NUMERIC=en_DK.UTF-8
+export LC_TIME="en_DK.UTF-8"
+export LC_COLLATE="en_DK.UTF-8"
+export LC_MONETARY=sv_SE.UTF-8
+export LC_MESSAGES="en_DK.UTF-8"
+export LC_PAPER=en_DK.UTF-8
+export LC_NAME=en_DK.UTF-8
+export LC_ADDRESS=en_DK.UTF-8
+export LC_TELEPHONE=en_DK.UTF-8
+export LC_MEASUREMENT=en_DK.UTF-8
+export LC_IDENTIFICATION=en_DK.UTF-8
+export LC_ALL=
+
 eval "$(stack --bash-completion-script stack)"
-PATH=/home/frms/.local/bin:$PATH
+
+#stty -ixon
+#stty -ixoff
+

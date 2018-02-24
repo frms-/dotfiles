@@ -82,3 +82,8 @@
 (add-to-list 'auto-mode-alist '("\\.tf$" . conf-mode))
 (setq reb-re-syntax 'string)
 ;(magit-auto-revert-mode -1)
+
+(require 'win-switch)
+(global-set-key "\C-xo" 'win-switch-dispatch)
+(setq win-switch-idle-time 1.4)
+(setq win-switch-other-window-first nil)
