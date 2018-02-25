@@ -35,22 +35,24 @@
 (load-library "settings")
 
 (eval-when-compile
-  (require 'use-package))
+  (progn (require 'use-package)
+         (setq use-package-compute-statistics t)))
 
 (use-package cua-base
-  :defer
+  :defer t
   :config (progn (cua-mode t)
                  (setq cua-enable-cua-keys nil)))
 
 (use-package zenburn-theme :ensure)
-
-(use-package dired-x)
-(use-package hlinum :ensure
+(use-package dired)
+(use-package dired-x :after dired)
+(use-package hlinum
+  :ensure
   :config (hlinum-activate))
 
 (use-package browse-kill-ring
   :ensure
-  :defer 5
+  :defer t
   :config (progn
 	    (browse-kill-ring-default-keybindings)
 	    (setq browse-kill-ring-quit-action 'save-and-restore)))
@@ -61,7 +63,7 @@
            uniquify-separator ":"))
 
 (use-package gtags
-  :defer
+  :defer t
   :commands gtags-mode
   :config (progn
 	    (add-hook
@@ -84,15 +86,15 @@
   :pin melpa
   :defer 5
   :config (add-hook 'ibuffer-mode-hook
-                    #'(lambda ()
-                        (ibuffer-switch-to-saved-filter-groups "default")
-                        (ibuffer-vc-set-filter-groups-by-vc-root)
-                        (unless (eq ibuffer-sorting-mode 'alphabetic)
-                          (ibuffer-do-sort-by-alphabetic))
-                        (ibuffer-auto-mode 1)
-                        (setq ibuffer-expert nil
-                              ibuffer-show-empty-groups nil
-                              ibuffer-default-sorting-mode 'major-mode))))
+                    (lambda ()
+                      (ibuffer-switch-to-saved-filter-groups "default")
+                      (ibuffer-vc-set-filter-groups-by-vc-root)
+                      (unless (eq ibuffer-sorting-mode 'alphabetic)
+                        (ibuffer-do-sort-by-alphabetic))
+                      (ibuffer-auto-mode 1)
+                      (setq ibuffer-expert nil
+                            ibuffer-show-empty-groups nil
+                            ibuffer-default-sorting-mode 'major-mode))))
 
 (use-package win-switch
   :ensure
@@ -101,11 +103,11 @@
             (setq win-switch-idle-time 1.4)
             (setq win-switch-other-window-first nil)))
 
-(use-package hindent :ensure :defer 5)
+(use-package hindent :ensure :defer t)
 
 (use-package haskell-mode
   :commands haskell-mode
-  :defer 3
+  :defer t
   :init (add-to-list 'auto-mode-alist '("\\.l?hs$" . haskell-mode))
   :config
   (add-hook 'haskell-mode-hook
@@ -124,10 +126,10 @@
 
 (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-buffer)
 
-(use-package erlang :ensure :defer :pin melpa)
+(use-package erlang :ensure :defer t :pin melpa)
 (use-package erlang-start
   :after erlang
-  :defer
+  :defer t
   :config
   (add-hook 'erlang-mode-hook
             (lambda()
@@ -216,7 +218,7 @@
  '(horizontal-scroll-bar-mode nil)
  '(package-selected-packages
    (quote
-    (hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
+    (use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
  '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t))))
  '(scroll-bar-mode nil))
 (custom-set-faces
