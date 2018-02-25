@@ -1,6 +1,4 @@
 ;; miscellaneous functions
-(eval-when-compile (require 'cl)
-                   (require 'use-package))
 
 (defun nuke-all-buffers ()
   "kill all buffers, leaving scratch only"
@@ -39,9 +37,6 @@
     (goto-char (min p (point)))))
 (global-set-key "\C-ck" 'delete-current-line)
 
-;; (defun comment-current-line ()
-;;   (interactive "p")
-
 (defun open-line-below (n)
   "Insert a newline at the end of the current line and leave point unchanged.
 With arg N, insert N newlines."
@@ -77,7 +72,6 @@ With arg N, insert N newlines."
 
 (global-set-key "\C-z" 'maybe-suspend-frame)
 
-
 (defun x-settings (frame)
   (when (display-graphic-p frame)
     (global-hl-line-mode t)))
@@ -86,11 +80,11 @@ With arg N, insert N newlines."
   (interactive)
   (when (y-or-n-p "Really exit emacs? ")
     (save-buffers-kill-terminal)))
+
 (global-set-key "\C-x\C-c" 'ask-save-buffers-kill-terminal)
 
 (defun fm-unbind-key (key-name function-name &optional keymap)
   (unbind-key key-name keymap))
-
 
 (defun my-colours-set ()
   (interactive)

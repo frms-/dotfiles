@@ -21,28 +21,32 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
+(require 'cl)
+
+(load-library "funs")
+(load-library "settings")
+
 (eval-when-compile
   (require 'use-package))
 
-(use-package zenburn-theme
-  :ensure)
+(use-package cua-base
+  :defer
+  :config (progn (cua-mode t)
+                 (setq cua-enable-cua-keys nil)))
 
-(require 'cl)
+(use-package zenburn-theme :ensure)
 
 (use-package dired-x)
-(use-package hlinum
-  :ensure)
-
-(use-package haskell-mode
-  :ensure)
+(use-package hlinum :ensure
+  :config (hlinum-activate))
 
 (use-package browse-kill-ring
   :ensure
@@ -51,19 +55,13 @@
 	    (browse-kill-ring-default-keybindings)
 	    (setq browse-kill-ring-quit-action 'save-and-restore)))
 
-(use-package autopair
-  :ensure
-  :config (progn
-	    (setq autopair-autowrap t)
-	    (add-hook 'c-mode-hook  #'(lambda () autopair-mode))
-	    (add-hook 'java-mode-hook #'(lambda () autopair-mode))))
-
 (use-package uniquify
-  :init (setq
-	 uniquify-buffer-name-style 'post-forward
-	 uniquify-separator ":"))
+  :config (setq
+           uniquify-buffer-name-style 'post-forward
+           uniquify-separator ":"))
 
 (use-package gtags
+  :defer
   :commands gtags-mode
   :config (progn
 	    (add-hook
@@ -80,19 +78,21 @@
                (local-set-key (kbd "RET") 'gtags-select-tag)
                (local-set-key (kbd "M-*") 'gtags-pop-stack)))))
 
-(use-package ibuffer
+(use-package ibuffer-vc
   :bind ("C-x C-b" . ibuffer)
-  :init
-  (add-hook 'ibuffer-mode-hook
-            #'(lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")
-                (ibuffer-vc-set-filter-groups-by-vc-root)
-                (unless (eq ibuffer-sorting-mode 'alphabetic)
-                  (ibuffer-do-sort-by-alphabetic))
-                (ibuffer-auto-mode 1)
-                (setq ibuffer-expert nil)
-                (setq ibuffer-show-empty-groups nil)
-                (setq ibuffer-default-sorting-mode 'major-mode))))
+  :ensure
+  :pin melpa
+  :defer 5
+  :config (add-hook 'ibuffer-mode-hook
+                    #'(lambda ()
+                        (ibuffer-switch-to-saved-filter-groups "default")
+                        (ibuffer-vc-set-filter-groups-by-vc-root)
+                        (unless (eq ibuffer-sorting-mode 'alphabetic)
+                          (ibuffer-do-sort-by-alphabetic))
+                        (ibuffer-auto-mode 1)
+                        (setq ibuffer-expert nil
+                              ibuffer-show-empty-groups nil
+                              ibuffer-default-sorting-mode 'major-mode))))
 
 (use-package win-switch
   :ensure
@@ -101,10 +101,85 @@
             (setq win-switch-idle-time 1.4)
             (setq win-switch-other-window-first nil)))
 
-(load-library "funs")
-(load-library "settings")
-(load-library "fm-haskell")
-;;(load-library "fm-erlang")
+(use-package hindent :ensure :defer 5)
+
+(use-package haskell-mode
+  :commands haskell-mode
+  :defer 3
+  :init (add-to-list 'auto-mode-alist '("\\.l?hs$" . haskell-mode))
+  :config
+  (add-hook 'haskell-mode-hook
+            (lambda()
+              (subword-mode 1)
+              (turn-on-haskell-indentation)
+              (setq tab-width 4
+                    haskell-indentation-layout-offset 4
+                    haskell-indentation-left-offset 4
+                    haskell-indentation-ifte-offset 4)
+              (intero-mode))))
+
+(defun flycheck-display-error-messages-unless-error-buffer (errors)
+  (unless (get-buffer-window flycheck-error-list-buffer)
+    (flycheck-display-error-messages errors)))
+
+(setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-buffer)
+
+(use-package erlang :ensure :defer :pin melpa)
+(use-package erlang-start
+  :after erlang
+  :defer
+  :config
+  (add-hook 'erlang-mode-hook
+            (lambda()
+              (setq erlang-indent-level 2
+                    erlang-electric-commands
+                    (remove 'erlang-electric-gt erlang-electric-commands))
+                (bind-key "C-<up>" 'erlang-beginning-of-function)
+                (set-face-attribute 'erlang-font-lock-exported-function-name-face nil
+                                    :inherit font-lock-function-name-face
+                                    :underline t)
+                (setq-local whitespace-style '(face lines-tail))
+                (setq-local whitespace-line-column 80)
+                (whitespace-mode t)
+                (subword-mode t))))
+
+(use-package misc :bind ("M-F" . forward-to-word))
+
+(use-package ido
+  :config (progn
+            (ido-mode t)
+            (setq ido-create-new-buffer 'always
+                  ido-file-extensions-order '(".erl" ".hrl" ".hs" ".emacs"  ".sh"))))
+
+(use-package edts-start
+  :disabled
+  :load-path "~/src/edts"
+  :config (progn
+            (edts-log-set-level 'debug)
+            (unbind-key "M--" auto-highlight-symbol-mode-map)
+            (bind-key "M-n" 'edts-code-next-issue edts-mode-map)
+            (bind-key "M-p" 'edts-code-previous-issue edts-mode-map)
+            (unbind-key "M-," edts-mode-map)
+            (bind-key "M-*" 'edts-find-source-unwind edts-mode-map)
+            (unbind-key "M-<left>" auto-highlight-symbol-mode-map)
+            (unbind-key "M-<right>" auto-highlight-symbol-mode-map))
+  :init (setq edts-inhibit-package-check t))
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
+
+(use-package grep
+  :config (add-hook 'grep-setup-hook
+                    (lambda()
+                      (progn
+                        (add-to-list 'grep-find-ignored-directories ".eunit")
+                        (add-to-list 'grep-find-ignored-directories ".ct_run.pay*")))))
+
 
 (defun x-settings (frame)
   (when (display-graphic-p frame)
@@ -112,14 +187,12 @@
   (unless (display-graphic-p frame)
     (global-linum-mode -1)))
 
-
 (add-hook 'after-init-hook
 	  (lambda ()
 	    (let ((delta (float-time (time-subtract (current-time) emacs-start-time))))
 	      (message "Loading %s...done (%.3fs)" ".emacs" delta))
 	    (x-settings (selected-frame))))
 
-(setq default-frame-alist '((cursor-color . "white")))
 
 (add-hook 'after-make-frame-functions (lambda (frame)
 					(x-settings frame)
@@ -140,8 +213,6 @@
  '(custom-safe-themes
    (quote
     ("7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
- '(edts-inhibit-package-check t)
- '(edts-man-root "/home/frms/.emacs.d/edts/doc/R16B03-1")
  '(horizontal-scroll-bar-mode nil)
  '(package-selected-packages
    (quote
@@ -155,19 +226,6 @@
  ;; If there is more than one, they won't work right.
  '(linum-highlight-face ((t (:background "gold" :foreground "black")))))
 
-(defun my-grep-hook ()
-  (add-to-list 'grep-find-ignored-directories ".eunit")
-  (add-to-list 'grep-find-ignored-directories ".ct_run.pay*"))
 
-(add-hook 'grep-setup-hook 'my-grep-hook)
-(put 'upcase-region 'disabled nil)
-
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "pandoc"))
 
 
