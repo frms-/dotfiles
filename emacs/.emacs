@@ -1,11 +1,10 @@
 (defconst emacs-start-time (current-time))
 
-(progn
-  (defconst initial-gc-cons-threshold  gc-cons-threshold)
-  (setq gc-cons-threshold 64000000)
-  (add-hook 'after-init-hook (lambda ()
-                               (setq gc-cons-threshold initial-gc-cons-threshold)
-                               (garbage-collect))))
+(defconst initial-gc-cons-threshold  gc-cons-threshold)
+(setq gc-cons-threshold 64000000)
+(add-hook 'after-init-hook (lambda ()
+                             (setq gc-cons-threshold initial-gc-cons-threshold)
+                             (garbage-collect)))
 
 (let ((default-directory  "~/.emacs.d/lisp/"))
   (normal-top-level-add-to-load-path '("."))
@@ -20,11 +19,10 @@
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
-  (require 'use-package))
-
-(when init-file-debug
-  (setq use-package-verbose t
-        use-package-compute-statistics t))
+  (require 'use-package)
+  (when init-file-debug
+    (setq use-package-verbose t
+          use-package-compute-statistics t)))
 
 (load-library "funs")
 
@@ -83,7 +81,6 @@
 (add-to-list 'auto-mode-alist '("\\.tf$" . conf-mode))
 (put 'upcase-region 'disabled nil)
 
-(global-set-key [C-tab] 'hippie-expand)
 (global-set-key [(ctrl meta w)] `delete-trailing-whitespace)
 (global-set-key [C-left] 'shrink-window-horizontally)
 (global-set-key [C-right] 'enlarge-window-horizontally)
@@ -91,8 +88,6 @@
 (global-set-key [M-right] 'windmove-right)
 (global-set-key [M-up] 'windmove-up)
 (global-set-key [M-down] 'windmove-down)
-(global-set-key "\C-cc" 'compile)
-(global-set-key "\C-cr" 'recompile)
 (global-set-key [f12] 'next-error)
 (global-set-key (kbd "<f11>") 'fm-full-screen-toogle)
 (global-set-key (kbd "M-g") 'goto-line)
@@ -100,17 +95,22 @@
 (global-set-key "\M-K" 'delete-current-line)
 (global-set-key (kbd "<f5>") (lambda () (interactive)(find-file "~/.emacs")))
 (global-set-key (kbd "C-x a r") 'align-regexp)
-(global-set-key (kbd "<f9>") 'rgrep)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
-(global-set-key (kbd "C-S-s") 'isearch-forward-symbol-at-point)
+(global-set-key (kbd "C-S") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "M-o") 'split-line)
 
-(use-package cua-base :defer t :bind ("C-<return>" . cua-rectangle-mark-mode) :init (setq cua-enable-cua-keys nil))
+(use-package cua-base :defer t
+  :bind ("C-<return>" . cua-rectangle-mark-mode)
+  :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t)
 (use-package zenburn-theme :ensure)
 (use-package dired :defer)
 (use-package dired-x :after dired)
 (use-package hlinum :ensure t)
+(use-package hippie-exp
+  :bind ("C-<tab>" . hippie-expand))
+(use-package compile
+  :bind (("C-c c" . compile) ("C-c r" . recompile)))
 
 (use-package browse-kill-ring
   :ensure t
@@ -238,6 +238,7 @@
 
 (use-package grep
   :defer t
+  :bind ("<f9>" . rgrep)
   :config (add-hook 'grep-setup-hook
                     (lambda()
                       (progn
