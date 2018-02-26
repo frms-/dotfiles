@@ -11,19 +11,21 @@
 (let ((default-directory  "~/.emacs.d/lisp/"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
-(delete-dups load-path)
 
-(require 'package)
+(eval-when-compile
+  (require 'package)
+  (setq package-enable-at-startup nil
+        package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (require 'use-package))
 
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-
-(package-initialize)
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(when init-file-debug
+  (setq use-package-verbose t
+        use-package-compute-statistics t))
 
 (load-library "funs")
 
@@ -104,10 +106,6 @@
 (global-set-key (kbd "C-S-s") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "M-o") 'split-line)
 
-(eval-when-compile
-  (progn (require 'use-package)
-         (setq use-package-compute-statistics t)))
-
 (use-package cua-base
   :defer t
   :config (progn (cua-mode t)
@@ -133,6 +131,7 @@
            uniquify-separator ":"))
 
 (use-package gtags
+  :disabled
   :defer t
   :commands gtags-mode
   :config (progn
