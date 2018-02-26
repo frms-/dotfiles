@@ -105,27 +105,23 @@
 (global-set-key (kbd "C-S-s") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "M-o") 'split-line)
 
-(use-package cua-base
-  :defer t
-  :config (progn (cua-mode t)
-                 (setq cua-enable-cua-keys nil)))
+(use-package cua-base :defer t :bind ("C-<return>" . cua-rectangle-mark-mode) :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t)
 (use-package zenburn-theme :ensure)
-(use-package dired)
+(use-package dired :defer)
 (use-package dired-x :after dired)
-(use-package hlinum
-  :ensure
-  :config (hlinum-activate))
+(use-package hlinum :ensure t)
 
 (use-package browse-kill-ring
-  :ensure
-  :defer t
+  :ensure t
+  :bind ("M-y" . browse-kill-ring)
   :config (progn
 	    (browse-kill-ring-default-keybindings)
 	    (setq browse-kill-ring-quit-action 'save-and-restore)))
 
 (use-package uniquify
-  :config (setq
+  :defer t
+  :init(setq
            uniquify-buffer-name-style 'post-forward
            uniquify-separator ":"))
 
@@ -165,11 +161,11 @@
                             ibuffer-default-sorting-mode 'major-mode))))
 
 (use-package win-switch
-  :ensure
-  :bind ("C-x C-o" . win-switch-dispatch)
-  :config (progn
-            (setq win-switch-idle-time 1.4)
-            (setq win-switch-other-window-first nil)))
+  :ensure t
+  :bind ("C-x o" . win-switch-dispatch)
+  :config
+  (progn (setq win-switch-idle-time 1.4)
+         (setq win-switch-other-window-first nil)))
 
 (use-package hindent :ensure :defer t)
 
@@ -210,8 +206,11 @@
 (use-package misc :bind ("M-F" . forward-to-word))
 
 (use-package ido
+  :bind (("C-x b" . ido-switch-buffer)
+         ("C-x B" . ido-switch-buffer-other-window)
+         ("C-x f" . ido-find-file))
   :config (progn
-            (ido-mode t)
+            (ido-mode)
             (setq ido-create-new-buffer 'always
                   ido-file-extensions-order '(".erl" ".hrl" ".hs" ".emacs"  ".sh"))))
 
@@ -238,6 +237,7 @@
   :init (setq markdown-command "pandoc"))
 
 (use-package grep
+  :defer t
   :config (add-hook 'grep-setup-hook
                     (lambda()
                       (progn
@@ -259,28 +259,5 @@
             (font-lock-add-keywords nil
                                     '(("\\<\\(fixme\\|todo\\|note\\|bug\\|qwerty\\|FIXME\\|TODO\\|NOTE\\|BUG\\|QWERTY\\|Fixme\\|Todo\\|Note\\|Bug\\|Qwerty\\)" 1 font-lock-warning-face prepend)))))
 
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#3f3f3f" "#cc9393" "#7f9f7f" "#f0dfaf" "#8cd0d3" "#dc8cc3" "#93e0e3" "#dcdccc"])
- '(custom-safe-themes
-   (quote
-    ("7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
- '(package-selected-packages
-   (quote
-    (use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode  erlang  csv-mode)))
- '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(linum-highlight-face ((t (:background "gold" :foreground "black")))))
-
-
-
-
+(setq custom-file "~/.emacs.d/lisp/settings.el")
+(load custom-file)
