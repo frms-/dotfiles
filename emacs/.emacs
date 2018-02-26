@@ -3,10 +3,9 @@
 (progn
   (defconst initial-gc-cons-threshold  gc-cons-threshold)
   (setq gc-cons-threshold 64000000)
-  (add-hook 'after-init-hook
-          (lambda ()
-            (setq gc-cons-threshold initial-gc-cons-threshold)
-            (garbage-collect))))
+  (add-hook 'after-init-hook (lambda ()
+                               (setq gc-cons-threshold initial-gc-cons-threshold)
+                               (garbage-collect))))
 
 (let ((default-directory  "~/.emacs.d/lisp/"))
   (normal-top-level-add-to-load-path '("."))
@@ -68,7 +67,7 @@
 (scroll-bar-mode -1)
 (global-font-lock-mode t)
 (transient-mark-mode t)
-(global-linum-mode t)
+(global-linum-mode)
 (show-paren-mode t)
 (global-hl-line-mode t)
 (line-number-mode t)
@@ -110,7 +109,7 @@
   :defer t
   :config (progn (cua-mode t)
                  (setq cua-enable-cua-keys nil)))
-
+(use-package csv-mode :ensure :defer t)
 (use-package zenburn-theme :ensure)
 (use-package dired)
 (use-package dired-x :after dired)
@@ -271,12 +270,10 @@
  '(custom-safe-themes
    (quote
     ("7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
- '(horizontal-scroll-bar-mode nil)
  '(package-selected-packages
    (quote
-    (use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode evil erlang django-theme csv-mode)))
- '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t))))
- '(scroll-bar-mode nil))
+    (use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode  erlang  csv-mode)))
+ '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
