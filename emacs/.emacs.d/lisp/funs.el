@@ -141,3 +141,9 @@ With arg N, insert N newlines."
 (defun flycheck-display-error-messages-unless-error-buffer (errors)
   (unless (get-buffer-window flycheck-error-list-buffer)
     (flycheck-display-error-messages errors)))
+
+(defun x-settings (frame)
+  (when (display-graphic-p frame)
+    (hl-line-mode t))
+  (unless (display-graphic-p frame)
+    (global-linum-mode -1)))

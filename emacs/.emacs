@@ -1,11 +1,20 @@
 (defconst emacs-start-time (current-time))
 
+(progn
+  (defconst initial-gc-cons-threshold  gc-cons-threshold)
+  (setq gc-cons-threshold 64000000)
+  (add-hook 'after-init-hook
+          (lambda ()
+            (setq gc-cons-threshold initial-gc-cons-threshold)
+            (garbage-collect))))
+
 (let ((default-directory  "~/.emacs.d/lisp/"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 (delete-dups load-path)
 
 (require 'package)
+
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
@@ -236,13 +245,6 @@
                       (progn
                         (add-to-list 'grep-find-ignored-directories ".eunit")
                         (add-to-list 'grep-find-ignored-directories ".ct_run.pay*")))))
-
-
-(defun x-settings (frame)
-  (when (display-graphic-p frame)
-    (hl-line-mode t))
-  (unless (display-graphic-p frame)
-    (global-linum-mode -1)))
 
 (add-hook 'after-init-hook
 	  (lambda ()
