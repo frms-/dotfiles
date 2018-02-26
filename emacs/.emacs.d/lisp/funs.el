@@ -137,3 +137,7 @@ With arg N, insert N newlines."
   (let ((window (get-mru-window (selected-frame) nil t)))
     (delete-window window)))
 (global-set-key [f2] 'close-mru-non-selected-window)
+
+(defun flycheck-display-error-messages-unless-error-buffer (errors)
+  (unless (get-buffer-window flycheck-error-list-buffer)
+    (flycheck-display-error-messages errors)))
