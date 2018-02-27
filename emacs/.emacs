@@ -18,11 +18,13 @@
   (package-initialize)
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
-    (package-install 'use-package))
-  (require 'use-package)
-  (when init-file-debug
+    (package-install 'use-package)))
+
+(require 'use-package)
+
+(when init-file-debug
     (setq use-package-verbose t
-          use-package-compute-statistics t)))
+          use-package-compute-statistics t))
 
 (load-library "funs")
 
@@ -208,7 +210,7 @@
 (use-package ido
   :bind (("C-x b" . ido-switch-buffer)
          ("C-x B" . ido-switch-buffer-other-window)
-         ("C-x f" . ido-find-file))
+         ("C-x C-f" . ido-find-file))
   :config (progn
             (ido-mode)
             (setq ido-create-new-buffer 'always
