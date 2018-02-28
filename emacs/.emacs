@@ -98,7 +98,8 @@
 (global-set-key (kbd "<f5>") (lambda () (interactive)(find-file "~/.emacs")))
 (global-set-key (kbd "C-x a r") 'align-regexp)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
-(global-set-key (kbd "C-S") 'isearch-forward-symbol-at-point)
+(global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
+(global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-o") 'split-line)
 
 (use-package cua-base :defer t
