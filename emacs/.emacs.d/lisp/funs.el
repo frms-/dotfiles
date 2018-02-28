@@ -26,8 +26,6 @@
   (other-window -1)
   (switch-to-buffer (other-buffer)))
 
-(global-set-key "\M-s" 'swap-windows)
-
 (defun delete-current-line (&optional arg)
   (interactive "p")
   (let ((p (point)))
@@ -35,7 +33,6 @@
     (kill-line arg)
     (end-of-line)
     (goto-char (min p (point)))))
-(global-set-key "\C-ck" 'delete-current-line)
 
 (defun open-line-below (n)
   "Insert a newline at the end of the current line and leave point unchanged.
@@ -48,8 +45,6 @@ With arg N, insert N newlines."
     (save-excursion
       (move n)
       (newline (abs n)))))
-
-(global-set-key "\C-\M-o" 'open-line-below)
 
 (defun java-string-to-sql ()
   (interactive)
@@ -70,8 +65,6 @@ With arg N, insert N newlines."
       (message "suspend-frame deactivated in graphic display")
     (suspend-frame)))
 
-(global-set-key "\C-z" 'maybe-suspend-frame)
-
 (defun x-settings (frame)
   (when (display-graphic-p frame)
     (global-hl-line-mode t)))
@@ -80,8 +73,6 @@ With arg N, insert N newlines."
   (interactive)
   (when (y-or-n-p "Really exit emacs? ")
     (save-buffers-kill-terminal)))
-
-(global-set-key "\C-x\C-c" 'ask-save-buffers-kill-terminal)
 
 (defun fm-unbind-key (key-name function-name &optional keymap)
   (unbind-key key-name keymap))
@@ -113,8 +104,7 @@ With arg N, insert N newlines."
           (t
            (load-theme theme t nil))))
 
-
-;; Define C-, and C-. as scoll-up and scroll-down
+;; Define C-, and C-. as scroll-up and scroll-down
 (defun scroll-up-one-line ()
   (interactive)
   (scroll-up 1))
@@ -127,16 +117,11 @@ With arg N, insert N newlines."
 (defun scroll-other-window-down-one-line ()
   (interactive)
   (scroll-other-window -1))
-(global-set-key [?\C-,] 'scroll-up-one-line)
-(global-set-key [?\C-.] 'scroll-down-one-line)
-(global-set-key [?\C-\;] 'scroll-other-window-up-one-line)
-(global-set-key [?\C-:] 'scroll-other-window-down-one-line)
 
 (defun close-mru-non-selected-window ()
   (interactive)
-  (let ((window (get-mru-window (selected-frame) nil t)))
+  (let ((window (get-mru-window (selected-window) t t)))
     (delete-window window)))
-(global-set-key [f2] 'close-mru-non-selected-window)
 
 (defun flycheck-display-error-messages-unless-error-buffer (errors)
   (unless (get-buffer-window flycheck-error-list-buffer)
@@ -147,3 +132,5 @@ With arg N, insert N newlines."
     (hl-line-mode t))
   (unless (display-graphic-p frame)
     (global-linum-mode -1)))
+
+(provide 'funs)
