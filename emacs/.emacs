@@ -81,10 +81,6 @@
 (global-set-key [(ctrl meta w)] `delete-trailing-whitespace)
 (global-set-key [C-left] 'shrink-window-horizontally)
 (global-set-key [C-right] 'enlarge-window-horizontally)
-(global-set-key [M-left] 'windmove-left)
-(global-set-key [M-right] 'windmove-right)
-(global-set-key [M-up] 'windmove-up)
-(global-set-key [M-down] 'windmove-down)
 (global-set-key [f12] 'next-error)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-c C-SPC") 'comment-or-uncomment-region)
@@ -96,6 +92,7 @@
 (global-set-key (kbd "M-o") 'split-line)
 
 (use-package conf-mode
+  :defer t
   :mode  ("\\.tf$" . conf-mode))
 
 (use-package funs
@@ -114,21 +111,17 @@
   :config (setq flycheck-display-errors-function
                 #'flycheck-display-error-messages-unless-error-buffer))
 
-(use-package vc-hooks
-  :defer t
-  :config (setq vc-make-backup-files t))
-(use-package cua-base :defer t
-  :bind ("C-<return>" . cua-rectangle-mark-mode)
+(use-package vc-hooks :defer t :config (setq vc-make-backup-files t))
+(use-package cua-base :defer t :bind
+  ("C-<return>" . cua-rectangle-mark-mode)
   :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t)
 (use-package zenburn-theme :ensure)
 (use-package dired :defer)
 (use-package dired-x :after dired)
 (use-package hlinum :ensure t)
-(use-package hippie-exp
-  :bind ("C-<tab>" . hippie-expand))
-(use-package compile
-  :bind (("C-c c" . compile) ("C-c r" . recompile)))
+(use-package compile :bind
+  (("C-c c" . compile) ("C-c r" . recompile)))
 
 (use-package browse-kill-ring
   :ensure t
