@@ -6,20 +6,22 @@
                              (setq gc-cons-threshold initial-gc-cons-threshold)
                              (garbage-collect)))
 
-(eval-and-compile
-  (require 'package)
+(eval-when-compile
   (setq package-enable-at-startup nil
         package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                           ("melpa" . "http://melpa.org/packages/")))
-  (package-initialize)
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package)))
+                           ("melpa" . "http://melpa.org/packages/"))))
+(require 'package)
+
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 (eval-and-compile
   (let ((default-directory  "~/.emacs.d/lisp/"))
-  (normal-top-level-add-to-load-path '("."))
-  (normal-top-level-add-subdirs-to-load-path)))
+    (normal-top-level-add-to-load-path '("."))
+    (normal-top-level-add-subdirs-to-load-path)))
 
 (require 'use-package)
 
@@ -36,9 +38,6 @@
       scroll-step 1
       display-time-24hr-format t
       display-time-day-and-date t
-      vc-follow-symlinks nil
-      dabbrev-case-fold-search t
-      dabbrev-case-fold-search nil
       abbrev-file-name "~/.emacs.d/data/abbrev_defs"
       auto-save-file-namqe-transforms '((".*" "~/.emacs.d/autosaves/\\1" t))
       backup-directory-alist `(("." . "~/.emacs.d/backups"))
@@ -81,22 +80,24 @@
 (global-set-key [(ctrl meta w)] `delete-trailing-whitespace)
 (global-set-key [C-left] 'shrink-window-horizontally)
 (global-set-key [C-right] 'enlarge-window-horizontally)
-(global-set-key [f12] 'next-error)
 (global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "C-c C-SPC") 'comment-or-uncomment-region)
 (global-set-key (kbd "<f5>") (lambda () (interactive)(find-file "~/.emacs")))
-(global-set-key (kbd "C-x a r") 'align-regexp)
+
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-o") 'split-line)
+
+(use-package newcomment
+  :bind ("C-c C-<SPC>" . comment-or-uncomment-region))
 
 (use-package conf-mode
   :defer t
   :mode  ("\\.tf$" . conf-mode))
 
 (use-package funs
-  :demand
+  ;;  :demand
+  :commands (x-settings)
   :bind (("M-s"     . swap-windows)
          ("C-c k"   . delete-current-line)
          ("C-M-o"   . open-line-below)
@@ -107,21 +108,30 @@
          ("C-;"     . scroll-other-window-up-one-line)
          ("C-:"     . scroll-other-window-down-one-line)
          ("<f2>"    . close-mru-non-selected-window)
-         ("<f11>"    . fm-full-screen-toogle))
-  :config (setq flycheck-display-errors-function
-                #'flycheck-display-error-messages-unless-error-buffer))
+         ("<f11>"    . fm-full-screen-toogle)))
 
-(use-package vc-hooks :defer t :config (setq vc-make-backup-files t))
-(use-package cua-base :defer t :bind
-  ("C-<return>" . cua-rectangle-mark-mode)
+(use-package dabbrev
+  :bind ("M-/" . dabbrev-expand)
+  :config (setq dabbrev-case-fold-search t
+                dabbrev-case-fold-search nil))
+
+(use-package vc-hooks :defer t :config (setq vc-follow-symlinks nil
+                                             vc-make-backup-files t))
+(use-package cua-base
+  :defer t
+  :bind ("C-<return>" . cua-rectangle-mark-mode)
   :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t)
 (use-package zenburn-theme :ensure)
 (use-package dired :defer)
 (use-package dired-x :after dired)
 (use-package hlinum :ensure t)
-(use-package compile :bind
-  (("C-c c" . compile) ("C-c r" . recompile)))
+
+(use-package compile
+  :bind (("C-c c" . compile) ("C-c r" . recompile)))
+
+(use-package align
+  :bind (("C-x a r") . align-regexp))
 
 (use-package browse-kill-ring
   :ensure t
@@ -178,8 +188,6 @@
   (progn (setq win-switch-idle-time 1.4)
          (setq win-switch-other-window-first nil)))
 
-(use-package hindent :ensure :defer t)
-
 (use-package haskell-mode
   :commands haskell-mode
   :defer t
@@ -188,12 +196,20 @@
   (add-hook 'haskell-mode-hook
             (lambda()
               (subword-mode 1)
-              (turn-on-haskell-indentation)
+              (haskell-indentation-mode)
               (setq tab-width 4
                     haskell-indentation-layout-offset 4
                     haskell-indentation-left-offset 4
-                    haskell-indentation-ifte-offset 4)
-              (intero-mode))))
+                    haskell-indentation-ifte-offset 4))))
+
+(use-package intero
+  :defer t
+  :hook (haskell-mode . intero-mode)
+  :config (use-package flycheck
+            :config (setq flycheck-display-errors-function
+                          #'flycheck-display-error-messages-unless-error-buffer)
+            (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
+  :ensure t)
 
 (use-package erlang :ensure :defer t :pin melpa)
 (use-package erlang-start
