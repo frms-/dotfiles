@@ -53,7 +53,6 @@
       default-frame-alist '((cursor-color . "white")))
 
 (setq-default show-trailing-whitespace t
-              cursor-type 'bar
               indent-tabs-mode nil)
 
 (tool-bar-mode -1)
@@ -73,7 +72,6 @@
 (set 'frame-title-format '(myltiple-frames "%f" ("" "%f")))
 (put 'narrow-to-region 'disabled nil)
 (set-face-underline 'font-lock-warning-face "yellow")
-(set-cursor-color "red")
 (put 'upcase-region 'disabled nil)
 
 (global-set-key [(ctrl meta w)] `delete-trailing-whitespace)
@@ -88,7 +86,8 @@
 (global-set-key (kbd "M-o") 'split-line)
 
 (use-package newcomment
-  :bind ("C-c C-<SPC>" . comment-or-uncomment-region))
+  :bind ("C-c C-<SPC>" . comment-or-uncomment-region)
+  :defer t)
 
 (use-package conf-mode
   :defer t
@@ -116,8 +115,7 @@
 
 (use-package vc-hooks :defer t :config (setq vc-follow-symlinks nil
                                              vc-make-backup-files t))
-(use-package cua-base
-  :defer t
+(use-package cua-base :defer t
   :bind ("C-<return>" . cua-rectangle-mark-mode)
   :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t :mode "\\.csv\\'")
@@ -168,7 +166,8 @@
   :bind ("C-x C-b" . ibuffer)
   :ensure
   :pin melpa
-  :defer 5
+  :defer t
+  :defines ibuffer-show-empty-groups
   :config (add-hook 'ibuffer-mode-hook
                     (lambda ()
                       (ibuffer-switch-to-saved-filter-groups "default")
@@ -189,6 +188,7 @@
 
 (use-package haskell-mode
   :commands haskell-mode
+  :defines haskell-indentation-ifte-offset
   :defer t
   :init (add-to-list 'auto-mode-alist '("\\.l?hs$" . haskell-mode))
   :config
@@ -214,6 +214,7 @@
 (use-package erlang-start
   :after erlang
   :defer t
+  :defines (whitespace-style whitespace-line-column)
   :config
   (add-hook 'erlang-mode-hook
             (lambda()
