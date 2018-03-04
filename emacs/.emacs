@@ -29,7 +29,6 @@
   (setq use-package-verbose t
         use-package-compute-statistics t))
 
-;;; Settings
 (setq inhibit-startup-screen t
       split-height-threshold 60
       split-width-threshold 100
@@ -121,7 +120,7 @@
   :defer t
   :bind ("C-<return>" . cua-rectangle-mark-mode)
   :init (setq cua-enable-cua-keys nil))
-(use-package csv-mode :ensure :defer t)
+(use-package csv-mode :ensure :defer t :mode "\\.csv\\'")
 (use-package zenburn-theme :ensure)
 (use-package dired :defer)
 (use-package dired-x :after dired)
@@ -131,7 +130,7 @@
   :bind (("C-c c" . compile) ("C-c r" . recompile)))
 
 (use-package align
-  :bind (("C-x a r") . align-regexp))
+  :bind ("C-x a r" . align-regexp))
 
 (use-package browse-kill-ring
   :ensure t
