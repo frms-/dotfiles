@@ -40,7 +40,6 @@
       abbrev-file-name "~/.emacs.d/data/abbrev_defs"
       auto-save-file-namqe-transforms '((".*" "~/.emacs.d/autosaves/\\1" t))
       backup-directory-alist `(("." . "~/.emacs.d/backups"))
-      make-bakup-files t
       backup-by-copying t
       version-control t
       kept-new-versions 8
@@ -79,6 +78,10 @@
 (global-set-key [C-right] 'enlarge-window-horizontally)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "<f5>") (lambda () (interactive)(find-file "~/.emacs")))
+(global-set-key [M-left] 'windmove-left)
+(global-set-key [M-right] 'windmove-right)
+(global-set-key [M-up] 'windmove-up)
+(global-set-key [M-down] 'windmove-down)
 
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
