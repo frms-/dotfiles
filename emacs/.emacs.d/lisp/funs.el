@@ -133,4 +133,11 @@ With arg N, insert N newlines."
   (unless (display-graphic-p frame)
     (global-linum-mode -1)))
 
+(defun insert-org-mode-cookie ()
+  (interactive)
+  (save-excursion
+    (progn
+      (goto-char (point-min))
+      (insert "-*- mode: org -*-\n"))))
+
 (provide 'funs)

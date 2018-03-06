@@ -1,6 +1,6 @@
 (defconst emacs-start-time (current-time))
 
-(defconst initial-gc-cons-threshold  gc-cons-threshold)
+(defconst initial-gc-cons-threshold gc-cons-threshold)
 (setq gc-cons-threshold 64000000)
 (add-hook 'after-init-hook (lambda ()
                              (setq gc-cons-threshold initial-gc-cons-threshold)
@@ -78,15 +78,16 @@
 (global-set-key [C-right] 'enlarge-window-horizontally)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "<f5>") (lambda () (interactive)(find-file "~/.emacs")))
-(global-set-key [M-left] 'windmove-left)
-(global-set-key [M-right] 'windmove-right)
-(global-set-key [M-up] 'windmove-up)
-(global-set-key [M-down] 'windmove-down)
-
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-o") 'split-line)
+
+(use-package windmove
+  :bind (("M-<left>" . windmove-left)
+         ("M-<right>" . windmove-right)
+         ("M-<up>" . windmove-up)
+         ("M-<down>" . windmove-down)))
 
 (use-package newcomment
   :bind ("C-c C-<SPC>" . comment-or-uncomment-region)
@@ -97,8 +98,8 @@
   :mode  ("\\.tf$" . conf-mode))
 
 (use-package funs
-  ;;  :demand
-  :commands (x-settings)
+  :commands (x-settings
+             insert-org-mode-cookie)
   :bind (("M-s"     . swap-windows)
          ("C-c k"   . delete-current-line)
          ("C-M-o"   . open-line-below)
