@@ -99,7 +99,7 @@
 
 (use-package funs
   :commands (x-settings
-             insert-org-mode-cookie)
+             insert-org-mode-magic-comment)
   :bind (("M-s"     . swap-windows)
          ("C-c k"   . delete-current-line)
          ("C-M-o"   . open-line-below)

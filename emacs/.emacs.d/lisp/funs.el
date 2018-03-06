@@ -133,7 +133,7 @@ With arg N, insert N newlines."
   (unless (display-graphic-p frame)
     (global-linum-mode -1)))
 
-(defun insert-org-mode-cookie ()
+(defun insert-org-mode-magic-comment ()
   (interactive)
   (save-excursion
     (progn
