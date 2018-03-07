@@ -133,11 +133,15 @@ With arg N, insert N newlines."
   (unless (display-graphic-p frame)
     (global-linum-mode -1)))
 
-(defun insert-org-mode-magic-comment ()
-  (interactive)
+(defun insert-mode-magic-comment (mode)
+  (interactive "sMode: ")
   (save-excursion
     (progn
       (goto-char (point-min))
-      (insert "-*- mode: org -*-\n"))))
+      (insert (format "-*- mode: %s -*-\n" mode)))))
+
+(defun insert-org-mode-magic-comment ()
+  (interactive)
+  (insert-mode-magic-comment "org"))
 
 (provide 'funs)
