@@ -15,19 +15,11 @@
         , iconRoot = "."
         , allDesktops = True
         , overrideRedirect = True
-        , commands = [ Run Weather "ESSB" [ "-t","<tempC>° <skyCondition> "
-                                          , "-L","18","-H","25"
-                                          , "--normal","green"
-                                          , "--high","red"
-                                          , "--low","lightblue"
-                                          ] 36000
-                     , Run Cpu ["-L","10","-H","50",
-                                "--normal","green","--high","red"] 10
-                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+        , commands = [ Run Date "%a %b %_d %Y %H:%M:%S " "date" 10
                      , Run StdinReader
-                     , Run Volume "default" "Master" [] 10
+                     , Run Cpu ["-L", "10", "-H", "50", "--normal", "green", "--high", "red"] 10
                      ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "%StdinReader% } { %cpu% :: %ESSB% :: %date% :: %default:Master%"
+        , template = "%StdinReader% } { %cpu% :: %date%"
         }
