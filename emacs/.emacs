@@ -214,25 +214,23 @@
             (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
   :ensure t)
 
-(use-package erlang :ensure :defer t :pin melpa)
-(use-package erlang-start
-  :after erlang
-  :defer t
+(use-package erlang :defer t
   :defines (whitespace-style whitespace-line-column)
-  :config
-  (add-hook 'erlang-mode-hook
-            (lambda()
-              (setq erlang-indent-level 2
-                    erlang-electric-commands
-                    (remove 'erlang-electric-gt erlang-electric-commands))
-                (bind-key "C-<up>" 'erlang-beginning-of-function)
-                (set-face-attribute 'erlang-font-lock-exported-function-name-face nil
-                                    :inherit font-lock-function-name-face
-                                    :underline t)
-                (setq-local whitespace-style '(face lines-tail))
-                (setq-local whitespace-line-column 80)
-                (whitespace-mode t)
-                (subword-mode t))))
+  :bind ("C-<up>" . erlang-beginning-of-function)
+  :mode (("\\.erl\\'" . erlang-mode)
+         ("\\.hrl\\'" . erlang-mode))
+  :interpreter "escript"
+  :config (progn
+            (setq erlang-indent-level 2
+                  erlang-electric-commands
+                  (remove 'erlang-electric-gt erlang-electric-commands))
+            (set-face-attribute 'erlang-font-lock-exported-function-name-face nil
+                                :inherit font-lock-function-name-face
+                                :underline t)
+            (setq-local whitespace-style '(face lines-tail))
+            (setq-local whitespace-line-column 80)
+            (whitespace-mode t)
+            (subword-mode t)))
 
 (use-package misc :bind ("M-F" . forward-to-word))
 
