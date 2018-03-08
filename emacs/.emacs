@@ -214,8 +214,9 @@
             (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
   :ensure t)
 
-(use-package erlang :defer t
-  :defines (whitespace-style whitespace-line-column)
+(use-package erlang
+  :defer t
+  :defines whitespace-style whitespace-line-column
   :bind ("C-<up>" . erlang-beginning-of-function)
   :mode (("\\.erl\\'" . erlang-mode)
          ("\\.hrl\\'" . erlang-mode))
@@ -239,7 +240,7 @@
          ("C-x B" . ido-switch-buffer-other-window)
          ("C-x C-f" . ido-find-file))
   :config (progn
-            (ido-mode)
+;            (ido-mode)
             (setq ido-create-new-buffer 'always
                   ido-file-extensions-order '(".erl" ".hrl" ".hs" ".emacs"  ".sh"))))
 
@@ -273,6 +274,12 @@
                       (progn
                         (add-to-list 'grep-find-ignored-directories ".eunit")
                         (add-to-list 'grep-find-ignored-directories ".ct_run.pay*")))))
+
+(use-package winner
+  :defer 5
+  :bind (;("M-N" . winner-redo)
+         ("M-P" . winner-undo))
+  :config (winner-mode 1))
 
 (add-hook 'after-init-hook
 	  (lambda ()
