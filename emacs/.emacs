@@ -239,10 +239,10 @@
   :bind (("C-x b" . ido-switch-buffer)
          ("C-x B" . ido-switch-buffer-other-window)
          ("C-x C-f" . ido-find-file))
-  :config (progn
-;            (ido-mode)
-            (setq ido-create-new-buffer 'always
-                  ido-file-extensions-order '(".erl" ".hrl" ".hs" ".emacs"  ".sh"))))
+  :config
+  (ido-mode)
+  (setq ido-create-new-buffer 'always
+        ido-file-extensions-order '(".erl" ".hrl" ".hs" ".emacs"  ".sh")))
 
 (use-package edts-start
   :disabled
@@ -277,7 +277,7 @@
 
 (use-package winner
   :defer 5
-  :bind (;("M-N" . winner-redo)
+  :bind (("M-N" . winner-redo)
          ("M-P" . winner-undo))
   :config (winner-mode 1))
 

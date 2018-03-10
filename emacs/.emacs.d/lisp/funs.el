@@ -136,7 +136,7 @@ With arg N, insert N newlines."
 (defun insert-mode-magic-comment (mode)
   (interactive "sMode: ")
   (save-excursion
-    (progn
+      (progn
       (goto-char (point-min))
       (insert (format "-*- mode: %s -*-\n" mode)))))
 
