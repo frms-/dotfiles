@@ -10,7 +10,7 @@
     ("7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
  '(package-selected-packages
    (quote
-    (intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode js2-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
+    (js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
  '(safe-local-variable-values (quote ((encoding . utf-8) (allout-layout . t)))))
 
 (custom-set-faces
