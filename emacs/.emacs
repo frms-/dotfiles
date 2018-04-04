@@ -166,22 +166,29 @@
                (local-set-key (kbd "RET") 'gtags-select-tag)
                (local-set-key (kbd "M-*") 'gtags-pop-stack)))))
 
-(use-package ibuffer-vc
+(use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
-  :ensure
-  :pin melpa
-  :defer t
-  :defines ibuffer-show-empty-groups
-  :config (add-hook 'ibuffer-mode-hook
-                    (lambda ()
-                      (ibuffer-switch-to-saved-filter-groups "default")
-                      (ibuffer-vc-set-filter-groups-by-vc-root)
-                      (unless (eq ibuffer-sorting-mode 'alphabetic)
-                        (ibuffer-do-sort-by-alphabetic))
-                      (ibuffer-auto-mode 1)
-                      (setq ibuffer-expert nil
-                            ibuffer-show-empty-groups nil
-                            ibuffer-default-sorting-mode 'major-mode))))
+  :init
+  (add-hook 'ibuffer-mode-hook
+            #'(lambda ()
+                (setq ibuffer-expert nil
+                      ibuffer-show-empty-groups nil
+                      ibuffer-default-sorting-mode 'major-mode)
+                (ibuffer-auto-mode 1))))
+
+(use-package ibuffer-vc
+  :commands ibuffer-vc-set-filter-groups-by-vc-root
+  :config (advice-add 'ibuffer-vc-generate-filter-groups-by-vc-root
+                      :filter-return
+                      #'(lambda (ibuffer-filter-groups)
+                          (append '(("*" (name . "^\\*"))) ibuffer-filter-groups)))
+
+  :hook (ibuffer . (lambda ()
+                     (ibuffer-vc-set-filter-groups-by-vc-root)
+                     (unless (eq ibuffer-sorting-mode 'alphabetic)
+                       (ibuffer-do-sort-by-alphabetic)))))
+
+
 
 (use-package win-switch
   :ensure t
@@ -276,10 +283,14 @@
                         (add-to-list 'grep-find-ignored-directories ".ct_run.pay*")))))
 
 (use-package winner
-  :defer 5
   :bind (("M-N" . winner-redo)
          ("M-P" . winner-undo))
   :config (winner-mode 1))
+
+
+(use-package iedit
+  :bind (("C-c C-;" . iedit-mode))
+  :ensure)
 
 (add-hook 'after-init-hook
 	  (lambda ()
