@@ -5,7 +5,7 @@ xrdb -merge ~/.Xdefaults
 xsetroot -cursor_name left_ptr
 
 #feh --bg-fill /home/frms/Pictures/december1994.jpg &
-
+setxkbmap -option ctrl:nocaps
 nm-applet &
 xscreensaver -nosplash &
 
