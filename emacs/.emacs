@@ -291,7 +291,7 @@
 
 
 (use-package iedit
-  :bind (("C-c C-;" . iedit-mode))
+  :bind (("C-c C-." . iedit-mode))
   :ensure)
 
 (add-hook 'after-init-hook
