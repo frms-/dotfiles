@@ -35,6 +35,7 @@
       message-log-max 16384
       show-paren-delay 0
       scroll-step 1
+      org-log-done 'time
       display-time-24hr-format t
       display-time-day-and-date t
       abbrev-file-name "~/.emacs.d/data/abbrev_defs"
@@ -52,7 +53,7 @@
       default-frame-alist '((cursor-color . "white")))
 
 (setq-default show-trailing-whitespace t
-              indent-tabs-mode nil)
+	      indent-tabs-mode nil)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -181,7 +182,7 @@
   :config (advice-add 'ibuffer-vc-generate-filter-groups-by-vc-root
                       :filter-return
                       #'(lambda (ibuffer-filter-groups)
-                          (append '(("*" (name . "^\\*"))) ibuffer-filter-groups)))
+                          (append '(("*" (name . "^\\*")) ) ibuffer-filter-groups)))
 
   :hook (ibuffer . (lambda ()
                      (ibuffer-vc-set-filter-groups-by-vc-root)
@@ -285,6 +286,7 @@
 (use-package winner
   :bind (("M-N" . winner-redo)
          ("M-P" . winner-undo))
+  :demand
   :config (winner-mode 1))
 
 
