@@ -10,9 +10,11 @@ nm-applet &
 xscreensaver -nosplash &
 
 mate-volume-control-applet &
-xbindkeys 
+xbindkeys
 
-trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 &
+
+xrandr --output DP1 --mode 2560x1440 --right-of eDP1
+trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 --monitor 1 &
+# trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 &
 
 exec /usr/bin/xmonad 2>&1 > $HOME/.xmonad/log.txt
-
