@@ -60,7 +60,7 @@
 (scroll-bar-mode -1)
 (global-font-lock-mode t)
 (transient-mark-mode t)
-(global-linum-mode)
+(global-display-line-numbers-mode)
 (show-paren-mode t)
 (global-hl-line-mode t)
 (line-number-mode t)
@@ -108,8 +108,6 @@
          ("C-x C-c" . ask-save-buffers-kill-terminal)
          ("C-,"     . scroll-up-one-line)
          ("C-."     . scroll-down-one-line)
-         ("C-;"     . scroll-other-window-up-one-line)
-         ("C-:"     . scroll-other-window-down-one-line)
          ("<f2>"    . close-mru-non-selected-window)
          ("<f11>"    . fm-full-screen-toogle)))
 
@@ -213,6 +211,9 @@
                     haskell-indentation-left-offset 4
                     haskell-indentation-ifte-offset 4))))
 
+(use-package hindent
+  :hook (haskell-mode . hindent-mode))
+
 (use-package intero
   :defer t
   :hook (haskell-mode . intero-mode)
@@ -291,8 +292,21 @@
 
 
 (use-package iedit
-  :bind (("C-c C-." . iedit-mode))
+  :bind ("C-;" . iedit-mode)
   :ensure)
+
+(use-package neotree
+  :config (progn
+            (add-hook 'neo-after-create-hook
+                      (lambda (window) (display-line-numbers-mode -1)))
+            (setq neo-theme 'ascii
+                  neo-smart-open t))
+  :ensure
+  :bind ("<f8>" . neotree-toggle))
+
+(use-package magit
+  :defer t
+  :bind (("C-x g" . magit-status)))
 
 (add-hook 'after-init-hook
 	  (lambda ()
