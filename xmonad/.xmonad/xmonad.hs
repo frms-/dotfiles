@@ -54,9 +54,10 @@ myWorkspaces = ["  1  ", "  2  ", "  3  ", "  4  ", "  5  ", "  6  ", "  7  ", "
 
 myLayout = avoidStruts $ smartBorders layouts
   where
-    layouts         = tiled ||| full ||| threeCol ||| grid
+    layouts         = tiled ||| full ||| threeCol ||| grid ||| threeColM
     tiled           = renamed [Replace "Tall"] $ toggleReflect (Tall 1 0.03 0.5)
     threeCol        = renamed [Replace "Three"] $ toggleReflect (ThreeCol 1 (0.8/100) (1/3))
+    threeColM       = renamed [Replace "ThreeM"] $ toggleReflect (ThreeColMid 1 (0.8/100) (1/3))
     grid            = Grid
     full            = Full
     toggleReflect l = toggleLayouts (reflectHoriz l) l

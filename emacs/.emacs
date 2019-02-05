@@ -57,6 +57,7 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(global-eldoc-mode -1)
 (scroll-bar-mode -1)
 (global-font-lock-mode t)
 (transient-mark-mode t)
@@ -84,6 +85,8 @@
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-o") 'split-line)
 
+(use-package diminish      :demand t)
+
 (use-package windmove
   :bind (("M-<left>" . windmove-left)
          ("M-<right>" . windmove-right)
@@ -101,8 +104,7 @@
 (use-package funs
   :commands (x-settings
              insert-org-mode-magic-comment)
-  :bind (("M-s"     . swap-windows)
-         ("C-c k"   . delete-current-line)
+  :bind (("C-c k"   . delete-current-line)
          ("C-M-o"   . open-line-below)
          ("C-z"     . maybe-suspend-frame)
          ("C-x C-c" . ask-save-buffers-kill-terminal)
@@ -128,7 +130,8 @@
 (use-package hlinum :ensure t)
 
 (use-package compile
-  :bind (("C-c c" . compile) ("C-c r" . recompile)))
+  :bind (("C-c c" . compile)
+         ("C-c r" . recompile)))
 
 (use-package align
   :bind ("C-x a r" . align-regexp))
@@ -201,11 +204,13 @@
   :defines haskell-indentation-ifte-offset
   :defer t
   :init (add-to-list 'auto-mode-alist '("\\.l?hs$" . haskell-mode))
+
   :config
   (add-hook 'haskell-mode-hook
             (lambda()
               (subword-mode 1)
               (haskell-indentation-mode)
+              (intero-global-mode 1)
               (setq tab-width 4
                     haskell-indentation-layout-offset 4
                     haskell-indentation-left-offset 4
@@ -216,11 +221,14 @@
 
 (use-package intero
   :defer t
-  :hook (haskell-mode . intero-mode)
-  :config (use-package flycheck
-            :config (setq flycheck-display-errors-function
-                          #'flycheck-display-error-messages-unless-error-buffer)
-            (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
+  :diminish
+;  :hook (haskell-mode . intero-mode)
+; :hook (haskell-mode . intero-mode-blacklist)
+  :config (progn (use-package flycheck
+                   :config (setq flycheck-display-errors-function
+                                 #'flycheck-display-error-messages-unless-error-buffer)
+                   (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
+                 (setq intero-blacklist '("~/src/fp-course")))
   :ensure t)
 
 (use-package erlang
@@ -245,6 +253,7 @@
 (use-package misc :bind ("M-F" . forward-to-word))
 
 (use-package ido
+  :disabled
   :bind (("C-x b" . ido-switch-buffer)
          ("C-x B" . ido-switch-buffer-other-window)
          ("C-x C-f" . ido-find-file))
@@ -252,6 +261,33 @@
   (ido-mode)
   (setq ido-create-new-buffer 'always
         ido-file-extensions-order '(".erl" ".hrl" ".hs" ".emacs"  ".sh")))
+
+(use-package ivy
+  :diminish
+  :demand t
+  :bind (("C-x b" . ivy-switch-buffer))
+  :config
+  (progn
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffert t
+          ivy-dymanic-exhibit-delay-ms 200
+          ivy-height 20
+          ivy-wrap t)))
+
+(use-package counsel
+  :after ivy
+  :demand t
+  :diminish
+  :bind (("C-x C-f" . counsel-find-file)
+         ("C-h f" . counsel-describe-function)))
+
+(use-package swiper
+  :after ivy
+  :bind (:map swiper-map
+;;              ("M-y" . yank)
+              ("M-%" . swiper-query-replace))
+  :bind (:map isearch-mode-map
+              ("C-o" . swiper-from-isearch)))
 
 (use-package edts-start
   :disabled
@@ -307,6 +343,25 @@
 (use-package magit
   :defer t
   :bind (("C-x g" . magit-status)))
+
+(use-package which-key
+  :defer 5
+  :diminish
+  :commands which-key-mode
+  :config
+  (which-key-mode))
+
+(use-package projectile
+  :defer 5
+  :diminish
+  :config (progn
+            (projectile-global-mode)
+            (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))
+
+(use-package counsel-projectile
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode 1))
 
 (add-hook 'after-init-hook
 	  (lambda ()

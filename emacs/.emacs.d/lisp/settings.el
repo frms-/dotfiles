@@ -9,13 +9,16 @@
    (quote
     ("7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
  '(fill-column 101)
+ '(flycheck-hlint-ignore-rules (quote ("\"eta reduce\"")))
  '(global-hl-fill-column-mode t)
+ '(intero-blacklist (quote ("/home/frms/src/fp-course")))
  '(package-selected-packages
    (quote
-    (hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
+    (diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
  '(safe-local-variable-values
    (quote
-    ((erlang-indent-level . 2)
+    ((intero-targets "generate:lib" "generate:test:tests")
+     (erlang-indent-level . 2)
      (intero-targets "reports:lib" "reports:exe:report" "reports:test:report-test")
      (encoding . utf-8)
      (allout-layout . t)))))
