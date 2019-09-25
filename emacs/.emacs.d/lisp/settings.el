@@ -7,14 +7,14 @@
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(custom-safe-themes
    (quote
-    ("7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
+    ("82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" "7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
  '(fill-column 101)
  '(flycheck-hlint-ignore-rules (quote ("\"eta reduce\"")))
  '(global-hl-fill-column-mode t)
  '(intero-blacklist (quote ("/home/frms/src/fp-course")))
  '(package-selected-packages
    (quote
-    (diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
+    (terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
  '(safe-local-variable-values
    (quote
     ((intero-targets "generate:lib" "generate:test:tests")
@@ -28,6 +28,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(button ((t (:underline nil))))
  '(compilation-error ((t nil)))
  '(flycheck-error ((t nil)))

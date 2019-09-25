@@ -361,7 +361,17 @@
 (use-package counsel-projectile
   :after (counsel projectile)
   :config
-  (counsel-projectile-mode 1))
+  (counsel-projectile-mode))
+
+(use-package control-mode
+  :bind (("C-x C-z" . global-control-mode)))
+
+(use-package default-text-scale
+  ;; font size
+  :defer t
+  :bind (("C-M-=" . default-text-scale-increase)
+         ("C-M--" . default-text-scale-decrease)
+         ("C-M-0" . default-text-scale-reset)))
 
 (add-hook 'after-init-hook
 	  (lambda ()

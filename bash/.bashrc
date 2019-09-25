@@ -5,8 +5,11 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_SHOWUPSTREAM="auto"
 
 export HISTCONTROL=ignoredups:erasedups
-export HISTSIZE=1048576
-export HISTFILESIZE=1048576
+#export HISTSIZE=1048576
+#export HISTFILESIZE=1048576
+export HISTSIZE=-1
+unset HISTFILESIZE
+
 export HISTTIMEFORMAT="%F %T "
 export PROMPT_COMMAND='history -a'
 # append to the history file, don't overwrite it
@@ -150,6 +153,6 @@ export LC_ALL=
 
 eval "$(stack --bash-completion-script stack)"
 
-#stty -ixon
+stty -ixon # make C-s search forward work
 #stty -ixoff
 
