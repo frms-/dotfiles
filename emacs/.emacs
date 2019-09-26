@@ -8,8 +8,7 @@
 
 (eval-when-compile
   (setq package-enable-at-startup nil
-        package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                           ("melpa" . "http://melpa.org/packages/"))))
+        package-archives '(("melpa" . "http://melpa.org/packages/"))))
 (require 'package)
 
 (package-initialize)
@@ -39,10 +38,10 @@
       display-time-24hr-format t
       display-time-day-and-date t
       abbrev-file-name "~/.emacs.d/data/abbrev_defs"
-      auto-save-file-namqe-transforms '((".*" "~/.emacs.d/autosaves/\\1" t))
       backup-directory-alist `(("." . "~/.emacs.d/backups"))
       backup-by-copying t
       version-control t
+      delete-old-versions t
       kept-new-versions 8
       kept-old-versions 4
       auto-save-default t
@@ -85,7 +84,8 @@
 (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "M-o") 'split-line)
 
-(use-package diminish      :demand t)
+(use-package diminish
+  :demand t)
 
 (use-package windmove
   :bind (("M-<left>" . windmove-left)
@@ -111,7 +111,7 @@
          ("C-,"     . scroll-up-one-line)
          ("C-."     . scroll-down-one-line)
          ("<f2>"    . close-mru-non-selected-window)
-         ("<f11>"    . fm-full-screen-toogle)))
+         ("<f11>"   . fm-full-screen-toogle)))
 
 (use-package dabbrev
   :bind ("M-/" . dabbrev-expand)
@@ -222,8 +222,6 @@
 (use-package intero
   :defer t
   :diminish
-;  :hook (haskell-mode . intero-mode)
-; :hook (haskell-mode . intero-mode-blacklist)
   :config (progn (use-package flycheck
                    :config (setq flycheck-display-errors-function
                                  #'flycheck-display-error-messages-unless-error-buffer)
@@ -237,18 +235,17 @@
   :bind ("C-<up>" . erlang-beginning-of-function)
   :mode (("\\.erl\\'" . erlang-mode)
          ("\\.hrl\\'" . erlang-mode))
-  :interpreter "escript"
-  :config (progn
-            (setq erlang-indent-level 2
-                  erlang-electric-commands
-                  (remove 'erlang-electric-gt erlang-electric-commands))
-            (set-face-attribute 'erlang-font-lock-exported-function-name-face nil
-                                :inherit font-lock-function-name-face
-                                :underline t)
-            (setq-local whitespace-style '(face lines-tail))
-            (setq-local whitespace-line-column 80)
-            (whitespace-mode t)
-            (subword-mode t)))
+  :config (add-hook 'erlang-mode-hook
+                    (lambda()
+                      (setq erlang-indent-level 2
+                            erlang-electric-commands
+                            (remove 'erlang-electric-gt erlang-electric-commands))
+                      (set-face-attribute 'erlang-font-lock-exported-function-name-face nil
+                                          :inherit font-lock-function-name-face
+                                          :underline t)
+                      (setq-local whitespace-style '(face lines-tail))
+                      (whitespace-mode t)
+                      (subword-mode))))
 
 (use-package misc :bind ("M-F" . forward-to-word))
 
@@ -284,7 +281,6 @@
 (use-package swiper
   :after ivy
   :bind (:map swiper-map
-;;              ("M-y" . yank)
               ("M-%" . swiper-query-replace))
   :bind (:map isearch-mode-map
               ("C-o" . swiper-from-isearch)))
@@ -378,7 +374,6 @@
 	    (let ((delta (float-time (time-subtract (current-time) emacs-start-time))))
 	      (message "Loading %s...done (%.3fs)" ".emacs" delta))
 	    (x-settings (selected-frame))))
-
 
 (add-hook 'after-make-frame-functions (lambda (frame)
 					(x-settings frame)
