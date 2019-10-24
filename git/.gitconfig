@@ -35,7 +35,8 @@
 	enabled = true
 [user]
 	name = Fredrik Malmros
-	email = fredrik.malmros@gmail.com
+	email = fredrik.malmros@klarna.com
+	signingkey = 16881F7A
 [url "git://github.com/ghc/packages-"]
 	insteadOf = git://github.com/ghc/packages/
 [url "http://github.com/ghc/packages-"]

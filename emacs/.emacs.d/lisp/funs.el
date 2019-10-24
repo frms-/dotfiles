@@ -144,4 +144,17 @@ With arg N, insert N newlines."
   (interactive)
   (insert-mode-magic-comment "org"))
 
+(defun debug-here()
+  (interactive)
+  (insert "io:format(user, \"~p:~p --> ~n\", [?MODULE, ?LINE]),"))
+
+(require 'url)
+
+(defun url-decode(str)
+  (interactive "P")
+  (let ((out (if (equal current-prefix-arg nil)
+               (url-unhex-string str)
+               (url-unhex-string (url-unhex-string str)))))
+    (print out (current-buffer))))
+
 (provide 'funs)

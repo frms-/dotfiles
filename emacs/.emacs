@@ -45,6 +45,7 @@
       kept-new-versions 8
       kept-old-versions 4
       auto-save-default t
+      large-file-warning-threshold nil
       bookmark-default-file "~/.emacs.d/data/bookmarks"
       kill-ring-max 1024
       bookmark-save-flag 1
@@ -79,6 +80,7 @@
 (global-set-key [C-right] 'enlarge-window-horizontally)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "<f5>") (lambda () (interactive)(find-file "~/.emacs")))
+(global-set-key (kbd "<f6>") (lambda () (interactive)(find-file "~/org/todo")))
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "C-s") 'isearch-forward)
@@ -195,9 +197,25 @@
 (use-package win-switch
   :ensure t
   :bind ("C-x o" . win-switch-dispatch)
+  :disabled
   :config
   (progn (setq win-switch-idle-time 1.4)
          (setq win-switch-other-window-first nil)))
+
+(use-package ace-window
+  :ensure
+  :bind* ("C-x o" . ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+        aw-background nil
+        aw-dispatch-always nil))
+
+(use-package avy
+  :bind* ("C-:" . avy-goto-char-timer)
+  :config (avy-setup-default))
+
+(use-package avy-zap
+  :bind ("M-z" . avy-zap-to-char-dwim))
 
 (use-package haskell-mode
   :commands haskell-mode
@@ -352,7 +370,8 @@
   :diminish
   :config (progn
             (projectile-global-mode)
-            (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))
+            (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+            (setq projectile-enable-idle-timer t)))
 
 (use-package counsel-projectile
   :after (counsel projectile)
