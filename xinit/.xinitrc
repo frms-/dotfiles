@@ -4,7 +4,8 @@ xrdb -merge ~/.Xdefaults
 #xrandr --output DVI-I-1 --mode 2560x1440 --output DP-1 --mode 2560x1440 --right-of DVI-I-1 --rotate left
 xsetroot -cursor_name left_ptr
 
-#feh --bg-fill /home/frms/Pictures/december1994.jpg &
+#feh --bg-fill --xinerama-index/home/frms/Pictures/pigs.jpg &
+feh --bg-fill --xinerama-index 1 /home/frms/Pictures/pigs.jpg &
 setxkbmap -option ctrl:nocaps
 nm-applet &
 xscreensaver -nosplash &

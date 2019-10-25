@@ -14,7 +14,7 @@
  '(intero-blacklist (quote ("/home/frms/src/fp-course")))
  '(package-selected-packages
    (quote
-    (terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
+    (avy-zap avy ace-window terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
  '(safe-local-variable-values
    (quote
     ((intero-targets "generate:lib" "generate:test:tests")
@@ -29,6 +29,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
+ '(aw-leading-char-face ((t (:inherit aw-mode-line-face :foreground "orange" :height 2.0))))
  '(button ((t (:underline nil))))
  '(compilation-error ((t nil)))
  '(flycheck-error ((t nil)))
