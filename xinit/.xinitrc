@@ -10,11 +10,11 @@ setxkbmap -option ctrl:nocaps
 nm-applet &
 xscreensaver -nosplash &
 
-mate-volume-control-applet &
+#mate-volume-control-applet &
 xbindkeys
 
 
-xrandr --output DP1 --mode 2560x1440 --right-of eDP1
+#xrandr --output DP1 --mode 2560x1440 --right-of eDP1
 trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 --monitor 1 &
 # trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 &
 

@@ -150,8 +150,9 @@ export LC_TELEPHONE=en_DK.UTF-8
 export LC_MEASUREMENT=en_DK.UTF-8
 export LC_IDENTIFICATION=en_DK.UTF-8
 export LC_ALL=
-
-eval "$(stack --bash-completion-script stack)"
+if hash stack 2>/dev/null; then
+  eval "$(stack --bash-completion-script stack)"
+fi
 
 stty -ixon # make C-s search forward work
 #stty -ixoff
