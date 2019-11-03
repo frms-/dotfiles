@@ -1,25 +1,38 @@
- Config { font =  "xft:DejaVu Sans Mono:pixelsize:11"
-        , additionalFonts = []
-        , borderColor = "black"
-        , border = NoBorder
-        , bgColor = "black"
-        , fgColor = "grey"
-        , alpha = 255
-        , position = TopW L 95
-        , textOffset = -1
-        , iconOffset = -1
-        , lowerOnStart = True
-        , pickBroadest = False
-        , persistent = False
-        , hideOnStart = False
-        , iconRoot = "."
-        , allDesktops = True
-        , overrideRedirect = True
-        , commands = [ Run Date "%a %b %_d %Y %H:%M:%S " "date" 10
-                     , Run StdinReader
-                     , Run Cpu ["-L", "10", "-H", "50", "--normal", "green", "--high", "red"] 10
-                     ]
-        , sepChar = "%"
-        , alignSep = "}{"
-        , template = "%StdinReader% } { %cpu% :: %date%"
-        }
+Config {
+  font =  "xft:DejaVu Sans Mono:pixelsize 5"
+  , additionalFonts = []
+  , borderColor = "black"
+  , border = NoBorder
+  , bgColor = "black"
+  , fgColor = "grey"
+  , alpha = 255
+--  , position = Top
+  , position = TopW L 93
+  , textOffset = -1
+  , iconOffset = -1
+  , lowerOnStart = True
+  , pickBroadest = True
+  , persistent = False
+  , hideOnStart = False
+  , iconRoot = "."
+  , allDesktops = True
+  , overrideRedirect = True
+  , commands = [ Run Cpu ["-L","10","-H","50", "--normal","green","--high","red"] 10
+               , Run Battery  [ "--template" , "Batt: <left>%"
+                             , "--Low"      , "15" 
+                             , "--High"     , "90"
+                             , "--low"      , "red"
+                             , "--high"     , "green"
+                             , "--"
+                             , "-o"	, "<left>% (<timeleft>)"
+                             , "-O"	, "<fc=#dBA520>Charging</fc>"
+                             , "-i"	, "<fc=#006000>Charged</fc>"
+                             ] 50
+
+ 	       , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+               , Run StdinReader
+               ]
+  , sepChar = "%"
+  , alignSep = "}{"
+  , template = "%StdinReader% }{ %battery% :: %cpu% :: %date% "
+  }
