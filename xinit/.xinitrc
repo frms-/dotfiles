@@ -1,21 +1,14 @@
 #!/bin/bash
 xrdb -merge ~/.Xdefaults
-
-#xrandr --output DVI-I-1 --mode 2560x1440 --output DP-1 --mode 2560x1440 --right-of DVI-I-1 --rotate left
 xsetroot -cursor_name left_ptr
-
-#feh --bg-fill --xinerama-index/home/frms/Pictures/pigs.jpg &
-feh --bg-fill --xinerama-index 1 /home/frms/Pictures/pigs.jpg &
 setxkbmap -option ctrl:nocaps
 nm-applet &
 xscreensaver -nosplash &
-
-#mate-volume-control-applet &
 xbindkeys
 
-
-#xrandr --output DP1 --mode 2560x1440 --right-of eDP1
+if [ -f ${HOME}/.xinitrc-local]; then
+    . ${HOME}/.xinitrc-local
+fi
 trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 --monitor 1 &
-# trayer --edge top --align right --widthtype percent --width 5 --expand false --transparent true --alpha 1  --heighttype pixel --height 22 --tint 0x000000 &
 
 exec /usr/bin/xmonad 2>&1 > $HOME/.xmonad/log.txt
