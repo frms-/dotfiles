@@ -12,8 +12,48 @@ Xcursor.size: 16
 
 xterm*background: black
 xterm*foreground: white
+
 xterm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+
 xterm*savelines: 16384
+
 xterm*VT100.Translations: #override \
 Ctrl Shift <Key>V:    insert-selection(CLIPBOARD) \n\
 Ctrl Shift <Key>C:    copy-selection(CLIPBOARD)
+
+! ! special
+! xterm*.foreground:   #93a1a1
+! xterm*.background:   #002b36
+! xterm*.cursorColor:  #93a1a1
+
+! ! black
+! xterm*.color0:       #002b36
+! xterm*.color8:       #657b83
+
+! ! red
+! xterm*.color1:       #dc322f
+! xterm*.color9:       #dc322f
+
+! ! green
+! xterm*.color2:       #859900
+! xterm*.color10:      #859900
+
+! ! yellow
+! xterm*.color3:       #b58900
+! xterm*.color11:      #b58900
+
+! ! blue
+! xterm*.color4:       #268bd2
+! xterm*.color12:      #268bd2
+
+! ! magenta
+! xterm*.color5:       #6c71c4
+! xterm*.color13:      #6c71c4
+
+! ! cyan
+! xterm*.color6:       #2aa198
+! xterm*.color14:      #2aa198
+
+! ! white
+! xterm*.color7:       #93a1a1
+! xterm*.color15:      #fdf6e3

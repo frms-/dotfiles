@@ -5,8 +5,6 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_SHOWUPSTREAM="auto"
 
 export HISTCONTROL=ignoredups:erasedups
-#export HISTSIZE=1048576
-#export HISTFILESIZE=1048576
 export HISTSIZE=-1
 unset HISTFILESIZE
 
@@ -150,10 +148,12 @@ export LC_TELEPHONE=en_DK.UTF-8
 export LC_MEASUREMENT=en_DK.UTF-8
 export LC_IDENTIFICATION=en_DK.UTF-8
 export LC_ALL=
+
 if hash stack 2>/dev/null; then
   eval "$(stack --bash-completion-script stack)"
 fi
 
 stty -ixon # make C-s search forward work
-#stty -ixoff
 
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

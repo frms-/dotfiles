@@ -1,14 +1,17 @@
 (defconst emacs-start-time (current-time))
 
 (defconst initial-gc-cons-threshold gc-cons-threshold)
+
 (setq gc-cons-threshold 64000000)
+
 (add-hook 'after-init-hook (lambda ()
                              (setq gc-cons-threshold initial-gc-cons-threshold)
                              (garbage-collect)))
 
 (eval-when-compile
   (setq package-enable-at-startup nil
-        package-archives '(("melpa" . "http://melpa.org/packages/"))))
+        package-archives '(("melpa" . "http://melpa.org/packages/")
+                           ("elpa" . "https://elpa.gnu.org/packages/"))))
 (require 'package)
 
 (package-initialize)
@@ -23,7 +26,7 @@
     (normal-top-level-add-subdirs-to-load-path)))
 
 (require 'use-package)
-
+(setq init-file-debug nil)
 (when init-file-debug
   (setq use-package-verbose t
         use-package-compute-statistics t))
@@ -32,6 +35,7 @@
       split-height-threshold 60
       split-width-threshold 100
       message-log-max 16384
+      read-process-output-max (* 1024 1024) ;; 1mb
       show-paren-delay 0
       scroll-step 1
       org-log-done 'time
@@ -45,15 +49,15 @@
       kept-new-versions 8
       kept-old-versions 4
       auto-save-default t
+      tags-add-tables nil
       large-file-warning-threshold nil
       bookmark-default-file "~/.emacs.d/data/bookmarks"
       kill-ring-max 1024
       bookmark-save-flag 1
       reb-re-syntax 'string
-      default-frame-alist '((cursor-color . "white")))
+      indent-tabs-mode nil)
 
-(setq-default show-trailing-whitespace t
-	      indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -90,14 +94,15 @@
   :demand t)
 
 (use-package windmove
+  :defer t
   :bind (("M-<left>" . windmove-left)
          ("M-<right>" . windmove-right)
          ("M-<up>" . windmove-up)
          ("M-<down>" . windmove-down)))
 
 (use-package newcomment
-  :bind ("C-c C-<SPC>" . comment-or-uncomment-region)
-  :defer t)
+  :defer t
+  :bind ("C-c C-<SPC>" . comment-or-uncomment-region))
 
 (use-package conf-mode
   :defer t
@@ -112,7 +117,6 @@
          ("C-x C-c" . ask-save-buffers-kill-terminal)
          ("C-,"     . scroll-up-one-line)
          ("C-."     . scroll-down-one-line)
-         ("<f2>"    . close-mru-non-selected-window)
          ("<f11>"   . fm-full-screen-toogle)))
 
 (use-package dabbrev
@@ -126,7 +130,12 @@
   :bind ("C-<return>" . cua-rectangle-mark-mode)
   :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t :mode "\\.csv\\'")
-(use-package zenburn-theme :ensure)
+(use-package zenburn-theme :ensure :disabled)
+(use-package atom-one-dark-theme :ensure :disabled)
+(use-package spacemacs-common
+    :ensure spacemacs-theme
+    :init (load-theme 'spacemacs-light t))
+
 (use-package dired :defer)
 (use-package dired-x :after dired)
 (use-package hlinum :ensure t)
@@ -228,7 +237,6 @@
             (lambda()
               (subword-mode 1)
               (haskell-indentation-mode)
-              (intero-global-mode 1)
               (setq tab-width 4
                     haskell-indentation-layout-offset 4
                     haskell-indentation-left-offset 4
@@ -237,20 +245,53 @@
 (use-package hindent
   :hook (haskell-mode . hindent-mode))
 
-(use-package intero
+(use-package lsp-haskell)
+
+;; (use-package intero
+;;   :disabled
+;;   :defer t
+;;   :diminish
+;; ;  :hook (haskell-mode . intero-global-mode)
+;;   :config (progn (use-package flycheck
+;;                    :config (setq flycheck-display-errors-function
+;;                                  #'flycheck-display-error-messages-unless-error-buffer)
+;;                    (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
+;;                  (setq intero-blacklist '("~/src/fp-course"))))
+
+(use-package lsp-mode
+  :init (setq lsp-keymap-prefix "C-c l"
+              lsp-enable-snippet nil)
+  :hook ((erlang-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration)
+         (haskell-mode . lsp))
+  :config (setq lsp-log-io t)
+  :commands lsp)
+
+(use-package yasnippet
   :defer t
-  :diminish
-  :config (progn (use-package flycheck
-                   :config (setq flycheck-display-errors-function
-                                 #'flycheck-display-error-messages-unless-error-buffer)
-                   (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
-                 (setq intero-blacklist '("~/src/fp-course")))
-  :ensure t)
+  :config (yas-global-mode t))
+
+(use-package lsp-ui
+    :config
+    (setq lsp-ui-sideline-enable nil
+          lsp-ui-doc-enable t
+          lsp-ui-doc-position 'bottom)
+
+    (defun quit-lsp-ui-doc-frame ()
+        (when (and lsp-ui-doc-mode (lsp-ui-doc--frame-visible-p))
+          (lsp-ui-doc-hide)))
+
+    (advice-add 'keyboard-quit :before #'quit-lsp-ui-doc-frame)
+    (advice-add 'isearch-exit :before #'quit-lsp-ui-doc-frame)
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 (use-package erlang
   :defer t
   :defines whitespace-style whitespace-line-column
-  :bind ("C-<up>" . erlang-beginning-of-function)
+  :bind (("C-<up>" . erlang-beginning-of-function)
+         (:map erlang-mode-map
+               ("TAB" . company-indent-or-complete-common)
+               ("C-M-i" . company-lsp)))
   :mode (("\\.erl\\'" . erlang-mode)
          ("\\.hrl\\'" . erlang-mode))
   :config (add-hook 'erlang-mode-hook
@@ -281,6 +322,7 @@
   :diminish
   :demand t
   :bind (("C-x b" . ivy-switch-buffer))
+  ;; There already is a way to do this. Just type C-u C-j to exit with the current input ignoring candidates.
   :config
   (progn
     (ivy-mode 1)
@@ -302,20 +344,6 @@
               ("M-%" . swiper-query-replace))
   :bind (:map isearch-mode-map
               ("C-o" . swiper-from-isearch)))
-
-(use-package edts-start
-  :disabled
-  :load-path "~/src/edts"
-  :config (progn
-            (edts-log-set-level 'debug)
-            (unbind-key "M--" auto-highlight-symbol-mode-map)
-            (bind-key "M-n" 'edts-code-next-issue edts-mode-map)
-            (bind-key "M-p" 'edts-code-previous-issue edts-mode-map)
-            (unbind-key "M-," edts-mode-map)
-            (bind-key "M-*" 'edts-find-source-unwind edts-mode-map)
-            (unbind-key "M-<left>" auto-highlight-symbol-mode-map)
-            (unbind-key "M-<right>" auto-highlight-symbol-mode-map))
-  :init (setq edts-inhibit-package-check t))
 
 (use-package markdown-mode
   :ensure t
@@ -351,12 +379,14 @@
                       (lambda (window) (display-line-numbers-mode -1)))
             (setq neo-theme 'ascii
                   neo-smart-open t))
+  :defer t
   :ensure
   :bind ("<f8>" . neotree-toggle))
 
 (use-package magit
-  :defer t
-  :bind (("C-x g" . magit-status)))
+  :defer 3
+  :bind (("C-x g" . magit-status)
+         ("C-c g" . magit-file-dispatch)))
 
 (use-package which-key
   :defer 5
@@ -368,10 +398,19 @@
 (use-package projectile
   :defer 5
   :diminish
-  :config (progn
-            (projectile-global-mode)
-            (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-            (setq projectile-enable-idle-timer t)))
+  :config
+  (projectile-global-mode)
+  (defun my-projectile-invalidate-cache (&rest _args)
+    (projectile-invalidate-cache nil))
+
+  (eval-after-load 'magit-branch
+    '(progn
+       (advice-add 'magit-checkout
+                   :after #'my-projectile-invalidate-cache)
+       (advice-add 'magit-branch-and-checkout
+                   :after #'my-projectile-invalidate-cache)))
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (setq projectile-enable-idle-timer t))
 
 (use-package counsel-projectile
   :after (counsel projectile)
@@ -379,6 +418,7 @@
   (counsel-projectile-mode))
 
 (use-package control-mode
+  :disabled
   :bind (("C-x C-z" . global-control-mode)))
 
 (use-package default-text-scale
@@ -388,6 +428,29 @@
          ("C-M--" . default-text-scale-decrease)
          ("C-M-0" . default-text-scale-reset)))
 
+(use-package company-lsp
+  :after lsp-mode
+  :config
+  (push 'company-lsp company-backends))
+
+(use-package company-dabbrev
+  :config
+  (setq company-dabbrev-downcase nil))
+
+(use-package org-bullets
+  :ensure
+  :config
+  :disabled
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package doom-modeline
+  :ensure t
+  :disabled
+  :init (doom-modeline-mode 1))
+
+(use-package all-the-icons
+  :ensure)
+
 (add-hook 'after-init-hook
 	  (lambda ()
 	    (let ((delta (float-time (time-subtract (current-time) emacs-start-time))))
@@ -396,12 +459,17 @@
 
 (add-hook 'after-make-frame-functions (lambda (frame)
 					(x-settings frame)
-                                        (load-theme 'zenburn t)))
+                                        (load-theme 'spacemacs-light t)))
 (add-hook 'find-file-hook
           (lambda()
             (font-lock-add-keywords nil '(("\\<\\(fixme\\|todo\\|note\\|bug
 \\|qwerty\\|FIXME\\|TODO\\|NOTE\\|BUG\\|QWERTY
 \\|Fixme\\|Todo\\|Note\\|Bug\\|Qwerty\\)" 1 font-lock-warning-face prepend)))))
+
+(add-hook 'after-change-major-mode-hook
+          (lambda()
+            (when (not buffer-read-only)
+              (setq show-trailing-whitespace t))))
 
 (setq custom-file "~/.emacs.d/lisp/settings.el")
 (load custom-file)
