@@ -8,8 +8,7 @@
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
  '(counsel-projectile-switch-project-action
-   (quote
-    (4
+   '(4
      ("o" counsel-projectile-switch-project-action "jump to a project buffer or file")
      ("f" counsel-projectile-switch-project-action-find-file "jump to a project file")
      ("d" counsel-projectile-switch-project-action-find-dir "jump to a project directory")
@@ -31,17 +30,15 @@
      ("xe" counsel-projectile-switch-project-action-run-eshell "invoke eshell from project root")
      ("xt" counsel-projectile-switch-project-action-run-term "invoke term from project root")
      ("Oc" counsel-projectile-switch-project-action-org-capture "capture into project")
-     ("Oa" counsel-projectile-switch-project-action-org-agenda "open project agenda"))))
+     ("Oa" counsel-projectile-switch-project-action-org-agenda "open project agenda")))
  '(custom-safe-themes
-   (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "76c5b2592c62f6b48923c00f97f74bcb7ddb741618283bdb2be35f3c0e1030e3" "669e02142a56f63861288cc585bee81643ded48a19e36bfdf02b66d745bcc626" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" "7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default)))
+   '("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "76c5b2592c62f6b48923c00f97f74bcb7ddb741618283bdb2be35f3c0e1030e3" "669e02142a56f63861288cc585bee81643ded48a19e36bfdf02b66d745bcc626" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" "7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default))
  '(fci-rule-color "#3E4451")
  '(fill-column 101)
- '(flycheck-hlint-ignore-rules (quote ("\"eta reduce\"")))
+ '(flycheck-hlint-ignore-rules '("\"eta reduce\""))
  '(global-hl-fill-column-mode t)
  '(hl-todo-keyword-faces
-   (quote
-    (("TODO" . "#dc752f")
+   '(("TODO" . "#dc752f")
      ("NEXT" . "#dc752f")
      ("THEM" . "#2d9574")
      ("PROG" . "#3a81c3")
@@ -55,11 +52,13 @@
      ("TEMP" . "#b1951d")
      ("FIXME" . "#dc752f")
      ("XXX+" . "#dc752f")
-     ("\\?\\?\\?+" . "#dc752f"))))
- '(intero-blacklist (quote ("/home/frms/src/fp-course")))
+     ("\\?\\?\\?+" . "#dc752f")))
+ '(intero-blacklist '("/home/frms/src/fp-course"))
+ '(js-indent-level 2)
+ '(lsp-haskell-server-args '("-d" "-l" "/tmp/hls.log"))
+ '(lsp-ui-doc-delay 0.4)
  '(magit-blame-styles
-   (quote
-    ((headings
+   '((headings
       (heading-format . "%-20a %C %s %H
 "))
      (margin
@@ -71,22 +70,20 @@
       (highlight-face . magit-blame-highlight))
      (lines
       (show-lines . t)
-      (show-message . t)))))
+      (show-message . t))))
+ '(magit-prefer-remote-upstream t)
  '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
- '(org-agenda-files (quote ("~/org/todo")))
+   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
+ '(org-agenda-files '("~/org/todo"))
  '(package-selected-packages
-   (quote
-    (nix-mode git-timemachine htmlize org orgalist all-the-icons doom-modeline org-bullets spacemacs-common spacemacs-light spacemacs-theme yasnippet company-lsp lsp-ui atom-one-dark-theme avy-zap avy ace-window terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode)))
- '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+   '(direnv flycheck-pos-tip flycheck-color-mode-line nix-sandbox lsp-ivy company flx nix-mode git-timemachine htmlize org orgalist all-the-icons doom-modeline org-bullets spacemacs-common spacemacs-light spacemacs-theme yasnippet company-lsp lsp-ui atom-one-dark-theme avy-zap avy ace-window terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode))
+ '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(safe-local-variable-values
-   (quote
-    ((intero-targets "generate:lib" "generate:test:tests")
+   '((intero-targets "generate:lib" "generate:test:tests")
      (erlang-indent-level . 2)
      (intero-targets "reports:lib" "reports:exe:report" "reports:test:report-test")
      (encoding . utf-8)
-     (allout-layout . t))))
+     (allout-layout . t)))
  '(tetris-x-colors
    [[229 192 123]
     [97 175 239]
@@ -97,8 +94,7 @@
     [86 182 194]])
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
+   '((20 . "#BC8383")
      (40 . "#CC9393")
      (60 . "#DFAF8F")
      (80 . "#D0BF8F")
@@ -115,7 +111,7 @@
      (300 . "#7CB8BB")
      (320 . "#8CD0D3")
      (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
+     (360 . "#DC8CC3")))
  '(vc-annotate-very-old-color "#DC8CC3"))
 
 (custom-set-faces
@@ -132,7 +128,9 @@
  '(flycheck-error-list-highlight ((t (:inherit highlight :underline nil))))
  '(flycheck-error-list-id-with-explainer ((t (:inherit flycheck-error-list-id :box (:line-width 1 :style released-button) :underline nil))))
  '(flycheck-error-list-warning ((t (:inherit warning :underline nil))))
- '(font-lock-comment-face ((t (:foreground "forest green" :slant italic))))
+ '(flycheck-fringe-warning ((t (:inherit bold :foreground "gold"))))
+ '(flycheck-warning ((t (:underline "gold"))))
+; '(font-lock-comment-face ((t (:foreground "forest green" :slant italic))))
  '(hl-fill-column-face ((t (:background "gray26" :foreground "red1"))))
  '(linum-highlight-face ((t (:background "gold" :foreground "black"))))
  '(success ((t (:foreground "#7F9F7F" :underline nil :weight bold)))))

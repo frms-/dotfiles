@@ -1,8 +1,4 @@
 # -*- mode: conf; -*-
-[user]
-#       	email 
-#        user 
-
 [color]
         ui = auto
         blame = always
@@ -35,8 +31,6 @@
 	enabled = true
 [user]
 	name = Fredrik Malmros
-	email = fredrik.malmros@klarna.com
-	signingkey = 16881F7A
 [url "git://github.com/ghc/packages-"]
 	insteadOf = git://github.com/ghc/packages/
 [url "http://github.com/ghc/packages-"]
@@ -47,3 +41,7 @@
 	insteadOf = ssh://git@github.com/ghc/packages/
 [url "git\\@github.com:/ghc/packages-"]
 	insteadOf = git@github.com:/ghc/packages/
+[init]
+	templatedir = ~/.git-templates
+[pull]
+	rebase = false

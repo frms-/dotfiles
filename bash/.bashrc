@@ -57,10 +57,6 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
@@ -135,19 +131,18 @@ fi
 ############### Locale settings ##############
 export LANG=en_DK.UTF-8
 export LANGUAGE=en_US
-export LC_CTYPE="en_DK.UTF-8"
-export LC_NUMERIC=en_DK.UTF-8
-export LC_TIME="en_DK.UTF-8"
-export LC_COLLATE="en_DK.UTF-8"
+#export LC_CTYPE="en_DK.UTF-8"
+#export LC_NUMERIC=en_DK.UTF-8
+#export LC_TIME="en_DK.UTF-8"
+#export LC_COLLATE="en_DK.UTF-8"
 export LC_MONETARY=sv_SE.UTF-8
-export LC_MESSAGES="en_DK.UTF-8"
+#export LC_MESSAGES="en_DK.UTF-8"
 export LC_PAPER=en_DK.UTF-8
 export LC_NAME=en_DK.UTF-8
 export LC_ADDRESS=en_DK.UTF-8
 export LC_TELEPHONE=en_DK.UTF-8
 export LC_MEASUREMENT=en_DK.UTF-8
 export LC_IDENTIFICATION=en_DK.UTF-8
-export LC_ALL=
 
 if hash stack 2>/dev/null; then
   eval "$(stack --bash-completion-script stack)"
@@ -155,5 +150,10 @@ fi
 
 stty -ixon # make C-s search forward work
 
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+eval "$(direnv hook bash)"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -138,7 +138,7 @@ With arg N, insert N newlines."
   (save-excursion
       (progn
       (goto-char (point-min))
-      (insert (format "-*- mode: %s -*-\n" mode)))))
+      (Insert (format "-*- mode: %s -*-\n" mode)))))
 
 (defun insert-org-mode-magic-comment ()
   (interactive)
@@ -156,5 +156,13 @@ With arg N, insert N newlines."
                (url-unhex-string str)
                (url-unhex-string (url-unhex-string str)))))
     (print out (current-buffer))))
+
+(defun pulse-line (&rest _)
+      "Pulse the current line."
+      (pulse-momentary-highlight-one-line (point)))
+(dolist (command '(scroll-up-command scroll-down-command
+                   recenter-top-bottom other-window))
+  (advice-add command :after #'pulse-line))
+
 
 (provide 'funs)

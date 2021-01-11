@@ -34,6 +34,7 @@
 (setq inhibit-startup-screen t
       split-height-threshold 60
       split-width-threshold 100
+      window-combination-resize t
       message-log-max 16384
       read-process-output-max (* 1024 1024) ;; 1mb
       show-paren-delay 0
@@ -204,7 +205,6 @@
 
 
 (use-package win-switch
-  :ensure t
   :bind ("C-x o" . win-switch-dispatch)
   :disabled
   :config
@@ -217,7 +217,7 @@
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
         aw-background nil
-        aw-dispatch-always nil))
+        aw-dispatch-always t))
 
 (use-package avy
   :bind* ("C-:" . avy-goto-char-timer)
@@ -247,43 +247,49 @@
 
 (use-package lsp-haskell)
 
-;; (use-package intero
-;;   :disabled
-;;   :defer t
-;;   :diminish
-;; ;  :hook (haskell-mode . intero-global-mode)
-;;   :config (progn (use-package flycheck
-;;                    :config (setq flycheck-display-errors-function
-;;                                  #'flycheck-display-error-messages-unless-error-buffer)
-;;                    (flycheck-add-next-checker 'intero '(warning . haskell-hlint)))
-;;                  (setq intero-blacklist '("~/src/fp-course"))))
-
 (use-package lsp-mode
   :init (setq lsp-keymap-prefix "C-c l"
               lsp-enable-snippet nil)
   :hook ((erlang-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration)
          (haskell-mode . lsp))
-  :config (setq lsp-log-io t)
+  :config (setq lsp-log-io t
+                yas-global-mode t
+                lsp-enable-file-watchers t
+                lsp-file-watch-threshold 2000)
+  :config
+  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   :commands lsp)
+
+(use-package flycheck
+  :config
+  (setq flycheck-display-errors-function 'ignore)
+  (flycheck-pos-tip-mode)
+  (advice-add 'keyboard-quit :before #'flycheck-pos-tip-hide-messages))
 
 (use-package yasnippet
   :defer t
-  :config (yas-global-mode t))
+  :after lsp-mode)
 
 (use-package lsp-ui
-    :config
-    (setq lsp-ui-sideline-enable nil
-          lsp-ui-doc-enable t
-          lsp-ui-doc-position 'bottom)
+  :after lsp-mode
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable nil
+        lsp-ui-doc-enable t
+        lsp-ui-doc-position 'bottom)
 
-    (defun quit-lsp-ui-doc-frame ()
-        (when (and lsp-ui-doc-mode (lsp-ui-doc--frame-visible-p))
-          (lsp-ui-doc-hide)))
+  ;; (define-key lsp-ui-mode-map [remap xref-find-definitions]
+  ;;   #'lsp-ui-peek-find-definitions)
+  ;; (define-key lsp-ui-mode-map [remap xref-find-references]
+  ;;   #'lsp-ui-peek-find-references)
 
-    (advice-add 'keyboard-quit :before #'quit-lsp-ui-doc-frame)
-    (advice-add 'isearch-exit :before #'quit-lsp-ui-doc-frame)
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  (defun quit-lsp-ui-doc-frame ()
+    (when (and lsp-ui-doc-mode (lsp-ui-doc--frame-visible-p))
+      (lsp-ui-doc-hide)))
+
+  (advice-add 'keyboard-quit :before #'quit-lsp-ui-doc-frame)
+  (advice-add 'isearch-exit :before #'quit-lsp-ui-doc-frame))
 
 (use-package erlang
   :defer t
@@ -291,7 +297,7 @@
   :bind (("C-<up>" . erlang-beginning-of-function)
          (:map erlang-mode-map
                ("TAB" . company-indent-or-complete-common)
-               ("C-M-i" . company-lsp)))
+               ))
   :mode (("\\.erl\\'" . erlang-mode)
          ("\\.hrl\\'" . erlang-mode))
   :config (add-hook 'erlang-mode-hook
@@ -425,18 +431,13 @@
   ;; font size
   :defer t
   :bind (("C-M-=" . default-text-scale-increase)
-         ("C-M--" . default-text-scale-decrease)
+         ("C-M-+" . default-text-scale-decrease)
          ("C-M-0" . default-text-scale-reset)))
-
-(use-package company-lsp
-  :after lsp-mode
-  :config
-  (push 'company-lsp company-backends))
 
 (use-package company-dabbrev
   :config
   (setq company-dabbrev-downcase nil))
-
+(use-package company)
 (use-package org-bullets
   :ensure
   :config
@@ -450,6 +451,11 @@
 
 (use-package all-the-icons
   :ensure)
+
+(use-package direnv
+  :config  (direnv-mode))
+
+(add-hook 'read-only-mode-hook 'view-mode)
 
 (add-hook 'after-init-hook
 	  (lambda ()
