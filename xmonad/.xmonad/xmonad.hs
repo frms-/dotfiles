@@ -12,6 +12,8 @@ import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicHooks
+import XMonad.Hooks.DynamicLog
 import XMonad.Layout.Spacing
 import XMonad.Layout.Renamed
 import XMonad.Layout.NoBorders
@@ -19,6 +21,7 @@ import XMonad.Layout.Reflect
 import XMonad.Layout.Grid
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.ToggleLayouts
+
 import XMonad.Util.Run (spawnPipe)
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
@@ -69,7 +72,7 @@ main = do p <- spawnPipe "xmobar"
     conf h = ewmh $ withUrgencyHook NoUrgencyHook def
          { terminal = "xterm"
          , logHook = dynamicLogWithPP $ xmobarPP { ppOutput          = hPutStrLn h
-                                                 , ppTitle           = xmobarColor myTitleFgColor "" . shorten 150
+                                                 , ppTitle           = xmobarColor myTitleFgColor "" . shortenLeft 48
                                                  , ppCurrent         = xmobarColor myCurrentWsFgColor myCurrentWsBgColor
                                                  , ppVisible         = xmobarColor myVisibleWsFgColor myVisibleWsBgColor
                                                  , ppHidden          = xmobarColor myHiddenWsFgColor myHiddenWsBgColor
@@ -97,6 +100,7 @@ main = do p <- spawnPipe "xmobar"
     mykeys (XConfig {XMonad.modMask = modm}) = M.fromList $
                                                [ ((controlMask .|. modm, xK_Right), nextWS) -- C-=>
                                                , ((controlMask .|. modm, xK_Left),  prevWS) -- -=-
+                                               , ((controlMask .|. modm, xK_p ), spawn "dmenu_run_history") -- %! Launch dmenu with history support
                                                , ((modm, xK_g ),   withFocused toggleBorder) -- mod-g
                                                , ((modm .|. controlMask, xK_space), sendMessage ToggleLayout) -- mod-space
                                                ] ++
@@ -110,4 +114,14 @@ main = do p <- spawnPipe "xmobar"
                                                [ ((modm .|. shiftMask, k), windows $ W.shift i)
                                                | (i, k) <- zip myWorkspaces workspaceKeys
                                                ]
+      -- , ((modMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
       where workspaceKeys = [xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0, xK_plus]
+-- | Like 'shorten', but truncate from the left instead of right.
+shortenLeft :: Int -> String -> String
+shortenLeft = shortenLeft' "..."
+
+-- | Like 'shorten'', but truncate from the left instead of right.
+shortenLeft' :: String -> Int -> String -> String
+shortenLeft' end n xs | l < n     = xs
+                      | otherwise = end ++ drop (l - n + length end) xs
+ where l = length xs

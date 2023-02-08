@@ -1,5 +1,4 @@
 (defconst emacs-start-time (current-time))
-
 (defconst initial-gc-cons-threshold gc-cons-threshold)
 
 (setq gc-cons-threshold 64000000)
@@ -9,11 +8,10 @@
                              (garbage-collect)))
 
 (eval-when-compile
-  (setq package-enable-at-startup nil
-        package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ("elpa" . "https://elpa.gnu.org/packages/"))))
-(require 'package)
+  (setq package-enable-at-startup nil))
 
+(require 'package)
+(add-to-list 'package-archives '("MELPA" . "http://melpa.org/packages/"))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -26,6 +24,7 @@
     (normal-top-level-add-subdirs-to-load-path)))
 
 (require 'use-package)
+
 (setq init-file-debug nil)
 (when init-file-debug
   (setq use-package-verbose t
@@ -127,15 +126,16 @@
 
 (use-package vc-hooks :defer t :config (setq vc-follow-symlinks nil
                                              vc-make-backup-files t))
-(use-package cua-base :defer t
+(use-package cua-base
+  :defer t
   :bind ("C-<return>" . cua-rectangle-mark-mode)
   :init (setq cua-enable-cua-keys nil))
 (use-package csv-mode :ensure :defer t :mode "\\.csv\\'")
-(use-package zenburn-theme :ensure :disabled)
-(use-package atom-one-dark-theme :ensure :disabled)
+(use-package zenburn-theme :ensure)
+(use-package atom-one-dark-theme :ensure)
 (use-package spacemacs-common
-    :ensure spacemacs-theme
-    :init (load-theme 'spacemacs-light t))
+  :ensure spacemacs-theme
+  :init (load-theme 'spacemacs-light t))
 
 (use-package dired :defer)
 (use-package dired-x :after dired)
@@ -182,6 +182,7 @@
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
+  :disabled
   :init
   (add-hook 'ibuffer-mode-hook
             #'(lambda ()
@@ -191,6 +192,7 @@
                 (ibuffer-auto-mode 1))))
 
 (use-package ibuffer-vc
+  :disabled
   :commands ibuffer-vc-set-filter-groups-by-vc-root
   :config (advice-add 'ibuffer-vc-generate-filter-groups-by-vc-root
                       :filter-return
@@ -201,8 +203,6 @@
                      (ibuffer-vc-set-filter-groups-by-vc-root)
                      (unless (eq ibuffer-sorting-mode 'alphabetic)
                        (ibuffer-do-sort-by-alphabetic)))))
-
-
 
 (use-package win-switch
   :bind ("C-x o" . win-switch-dispatch)
@@ -217,7 +217,7 @@
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
         aw-background nil
-        aw-dispatch-always t))
+        aw-dispatch-always nil))
 
 (use-package avy
   :bind* ("C-:" . avy-goto-char-timer)
@@ -225,11 +225,15 @@
 
 (use-package avy-zap
   :bind ("M-z" . avy-zap-to-char-dwim))
+;; (use-package helm
+;;   :bind (:map helm-command-map
+;;               ("C-c h" . helm-execute-persistent-action)))
 
 (use-package haskell-mode
   :commands haskell-mode
   :defines haskell-indentation-ifte-offset
   :defer t
+  :bind (:map haskell-mode-map ("C-c C-c" . haskell-cabal-visit-file))
   :init (add-to-list 'auto-mode-alist '("\\.l?hs$" . haskell-mode))
 
   :config
@@ -245,31 +249,55 @@
 (use-package hindent
   :hook (haskell-mode . hindent-mode))
 
-(use-package lsp-haskell)
+(use-package lsp-haskell
+  :after lsp-mode
+  :config (setq lsp-modeline-diagnostics-enable t))
 
 (use-package lsp-mode
   :init (setq lsp-keymap-prefix "C-c l"
               lsp-enable-snippet nil)
-  :hook ((erlang-mode . lsp)
+  :hook ((rust-mode . lsp)
+         (erlang-mode . lsp)
+         (erlang-mode . yas-minor-mode)
          (lsp-mode . lsp-enable-which-key-integration)
          (haskell-mode . lsp))
   :config (setq lsp-log-io t
                 yas-global-mode t
+                lsp-headerline-breadcrumb-mode 0
+                lsp-enable-symbol-highlighting t
                 lsp-enable-file-watchers t
-                lsp-file-watch-threshold 2000)
+                lsp-lens-enable nil
+                lsp-eldoc-enable-hover nil
+                lsp-modeline-diagnostics-enable nil
+                lsp-signature-auto-activate nil
+                lsp-file-watch-threshold 2000
+                lsp-rust-analyzer-server-display-inlay-hints t
+                ;; lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial"
+                ;; lsp-rust-analyzer-display-chaining-hints t
+                ;; lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil
+                ;; lsp-rust-analyzer-display-closure-return-type-hints t
+                ;; lsp-rust-analyzer-display-parameter-hints nil
+                ;; lsp-rust-analyzer-display-reborrow-hints nil)
+                )
   :config
   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   :commands lsp)
 
 (use-package flycheck
-  :config
-  (setq flycheck-display-errors-function 'ignore)
-  (flycheck-pos-tip-mode)
-  (advice-add 'keyboard-quit :before #'flycheck-pos-tip-hide-messages))
+  :commands (flycheck-mode)
+  :config (setq flycheck-display-errors-function 'ignore)
+          (flycheck-pos-tip-mode)
+          (advice-add 'keyboard-quit :before #'flycheck-pos-tip-hide-messages)
+  :hook ((sh-mode . flycheck-mode)))
+
+;; (use-package shell-script-mode
+;;   :config (flycheck-mode))
 
 (use-package yasnippet
+  :ensure
   :defer t
-  :after lsp-mode)
+  :after lsp-mode
+  :config (yas-minor-mode-on))
 
 (use-package lsp-ui
   :after lsp-mode
@@ -277,8 +305,12 @@
   :config
   (setq lsp-ui-sideline-enable nil
         lsp-ui-doc-enable t
+        lsp-ui-sideline-show-code-actions nil
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-doc-show-with-cursor nil
+        lsp-ui-doc-show-with-mouse t
+        lsp-ui-sideline-show-diagnostics nil
         lsp-ui-doc-position 'bottom)
-
   ;; (define-key lsp-ui-mode-map [remap xref-find-definitions]
   ;;   #'lsp-ui-peek-find-definitions)
   ;; (define-key lsp-ui-mode-map [remap xref-find-references]
@@ -342,7 +374,8 @@
   :demand t
   :diminish
   :bind (("C-x C-f" . counsel-find-file)
-         ("C-h f" . counsel-describe-function)))
+         ("C-h f" . counsel-describe-function)
+         (("M-x" . counsel-M-x))))
 
 (use-package swiper
   :after ivy
@@ -384,6 +417,7 @@
             (add-hook 'neo-after-create-hook
                       (lambda (window) (display-line-numbers-mode -1)))
             (setq neo-theme 'ascii
+                  neo-window-fixed-size nil
                   neo-smart-open t))
   :defer t
   :ensure
@@ -437,12 +471,33 @@
 (use-package company-dabbrev
   :config
   (setq company-dabbrev-downcase nil))
+
 (use-package company)
+
 (use-package org-bullets
   :ensure
   :config
   :disabled
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package org
+  :ensure
+  :bind (("C-c c" . org-capture)
+         ("C-c $" . org-archive-subtree)
+         ("C-c /" . org-sparse-tree))
+  :config (defun read-and-insert-iso-date()
+            (let* ((time (org-read-date nil t nil))
+                   (stamp (format-time-string "%y-%m-%d" time)))
+              stamp))
+  (setq org-startup-indented t
+                org-directory "~/org"
+                org-capture-templates '(("t" "TODO" entry
+                                         (file+headline "todo" "TODOs")
+                                         "* TODO %?\n")
+                                        ("s" "Session" plain
+                                         (file "session")
+                                         "%(read-and-insert-iso-date): %?"
+                                         :jump-to-captured 1))))
 
 (use-package doom-modeline
   :ensure t
@@ -455,7 +510,7 @@
 (use-package direnv
   :config  (direnv-mode))
 
-(add-hook 'read-only-mode-hook 'view-mode)
+(use-package git-timemachine)
 
 (add-hook 'after-init-hook
 	  (lambda ()

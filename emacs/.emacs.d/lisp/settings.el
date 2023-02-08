@@ -32,7 +32,7 @@
      ("Oc" counsel-projectile-switch-project-action-org-capture "capture into project")
      ("Oa" counsel-projectile-switch-project-action-org-agenda "open project agenda")))
  '(custom-safe-themes
-   '("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "76c5b2592c62f6b48923c00f97f74bcb7ddb741618283bdb2be35f3c0e1030e3" "669e02142a56f63861288cc585bee81643ded48a19e36bfdf02b66d745bcc626" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" "7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default))
+   '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "76c5b2592c62f6b48923c00f97f74bcb7ddb741618283bdb2be35f3c0e1030e3" "669e02142a56f63861288cc585bee81643ded48a19e36bfdf02b66d745bcc626" "82358261c32ebedfee2ca0f87299f74008a2e5ba5c502bde7aaa15db20ee3731" "7e0fe06c91f0902eb8c68737c13a0868f6b800165753d406df0cffcfaf99dc7a" default))
  '(fci-rule-color "#3E4451")
  '(fill-column 101)
  '(flycheck-hlint-ignore-rules '("\"eta reduce\""))
@@ -53,9 +53,11 @@
      ("FIXME" . "#dc752f")
      ("XXX+" . "#dc752f")
      ("\\?\\?\\?+" . "#dc752f")))
+ '(ignored-local-variable-values '((apheleia-formatter . nixfmt)))
  '(intero-blacklist '("/home/frms/src/fp-course"))
  '(js-indent-level 2)
  '(lsp-haskell-server-args '("-d" "-l" "/tmp/hls.log"))
+ '(lsp-headerline-breadcrumb-enable nil)
  '(lsp-ui-doc-delay 0.4)
  '(magit-blame-styles
    '((headings
@@ -76,7 +78,7 @@
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(org-agenda-files '("~/org/todo"))
  '(package-selected-packages
-   '(direnv flycheck-pos-tip flycheck-color-mode-line nix-sandbox lsp-ivy company flx nix-mode git-timemachine htmlize org orgalist all-the-icons doom-modeline org-bullets spacemacs-common spacemacs-light spacemacs-theme yasnippet company-lsp lsp-ui atom-one-dark-theme avy-zap avy ace-window terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode))
+   '(org-indent-mode jenkinsfile-mode dash dash-functional flycheck-rust rust-mode atom-dark-theme flycheck direnv flycheck-pos-tip flycheck-color-mode-line nix-sandbox lsp-ivy company flx nix-mode git-timemachine htmlize org orgalist all-the-icons doom-modeline org-bullets spacemacs-common spacemacs-light spacemacs-theme yasnippet company-lsp lsp-ui atom-one-dark-theme avy-zap avy ace-window terraform-mode nord-theme lua-mode default-text-scale control-mode typescript-mode evil-tutor diminish counsel-projectile projectile counsel swiper ivy which-key hl-fill-column adoc-mode zenburn-theme lsp-haskell lsp-mode neotree groovy-mode dockerfile-mode js2-mode iedit ledit intero-mode use-package hindent intero 0blayout autopair browse-kill-ring haskell-mode yaml-mode win-switch scala-mode popup-switcher markdown-mode magit lusty-explorer json-mode idris-mode ibuffer-vc hlinum go-mode erlang csv-mode))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(safe-local-variable-values
    '((intero-targets "generate:lib" "generate:test:tests")
@@ -84,6 +86,7 @@
      (intero-targets "reports:lib" "reports:exe:report" "reports:test:report-test")
      (encoding . utf-8)
      (allout-layout . t)))
+ '(suggest-key-bindings nil)
  '(tetris-x-colors
    [[229 192 123]
     [97 175 239]
@@ -112,7 +115,8 @@
      (320 . "#8CD0D3")
      (340 . "#94BFF3")
      (360 . "#DC8CC3")))
- '(vc-annotate-very-old-color "#DC8CC3"))
+ '(vc-annotate-very-old-color "#DC8CC3")
+ '(warning-suppress-types '((comp) (comp) (comp) (comp))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -130,7 +134,6 @@
  '(flycheck-error-list-warning ((t (:inherit warning :underline nil))))
  '(flycheck-fringe-warning ((t (:inherit bold :foreground "gold"))))
  '(flycheck-warning ((t (:underline "gold"))))
-; '(font-lock-comment-face ((t (:foreground "forest green" :slant italic))))
  '(hl-fill-column-face ((t (:background "gray26" :foreground "red1"))))
  '(linum-highlight-face ((t (:background "gold" :foreground "black"))))
  '(success ((t (:foreground "#7F9F7F" :underline nil :weight bold)))))

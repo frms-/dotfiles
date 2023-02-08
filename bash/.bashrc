@@ -95,15 +95,15 @@ man() {
   LESS_TERMCAP_md=$'\E[0;93m' \
   LESS_TERMCAP_me=$'\E[0m' \
   LESS_TERMCAP_se=$'\E[0m' \
-  LESS_TERMCAP_so=$(tput bold; tput setaf 8; tput setab 3) \
+  LESS_TERMCAP_so="$(tput bold; tput setaf 8; tput setab 3)" \
   LESS_TERMCAP_ue=$'\E[0m' \
   LESS_TERMCAP_us=$'\E[04;32m' \
-  LESS_TERMCAP_mr=$(tput rev) \
-  LESS_TERMCAP_mh=$(tput dim) \
-  LESS_TERMCAP_ZN=$(tput ssubm) \
-  LESS_TERMCAP_ZV=$(tput rsubm) \
-  LESS_TERMCAP_ZO=$(tput ssupm) \
-  LESS_TERMCAP_ZW=$(tput rsupm) \
+  LESS_TERMCAP_mr="$(tput rev)" \
+  LESS_TERMCAP_mh="$(tput dim)" \
+  LESS_TERMCAP_ZN="$(tput ssubm)" \
+  LESS_TERMCAP_ZV="$(tput rsubm)" \
+  LESS_TERMCAP_ZO="$(tput ssupm)" \
+  LESS_TERMCAP_ZW="$(tput rsupm)" \
   man "$@"
 }
 
@@ -127,16 +127,13 @@ if [ -f ${HOME}/.bashrc-local ]; then
     . ${HOME}/.bashrc-local
 fi
 
+function man_flag () { LESS=+/^[[:blank:]]+"$2" man "$1" ;}
+alias mf=man_flag
 
 ############### Locale settings ##############
 export LANG=en_DK.UTF-8
 export LANGUAGE=en_US
-#export LC_CTYPE="en_DK.UTF-8"
-#export LC_NUMERIC=en_DK.UTF-8
-#export LC_TIME="en_DK.UTF-8"
-#export LC_COLLATE="en_DK.UTF-8"
 export LC_MONETARY=sv_SE.UTF-8
-#export LC_MESSAGES="en_DK.UTF-8"
 export LC_PAPER=en_DK.UTF-8
 export LC_NAME=en_DK.UTF-8
 export LC_ADDRESS=en_DK.UTF-8
@@ -148,7 +145,7 @@ if hash stack 2>/dev/null; then
   eval "$(stack --bash-completion-script stack)"
 fi
 
-stty -ixon # make C-s search forward work
+[ -t 0 ] && stty -ixon # make C-s search forward work
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -157,3 +154,4 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 eval "$(direnv hook bash)"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+source "$HOME/.cargo/env"

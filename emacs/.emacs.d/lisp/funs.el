@@ -138,24 +138,28 @@ With arg N, insert N newlines."
   (save-excursion
       (progn
       (goto-char (point-min))
-      (Insert (format "-*- mode: %s -*-\n" mode)))))
+      (insert (format "-*- mode: %s -*-\n" mode)))))
 
 (defun insert-org-mode-magic-comment ()
   (interactive)
   (insert-mode-magic-comment "org"))
 
-(defun debug-here()
-  (interactive)
-  (insert "io:format(user, \"~p:~p --> ~n\", [?MODULE, ?LINE]),"))
-
 (require 'url)
 
-(defun url-decode(str)
+(defun url-decode(str &optional)
   (interactive "P")
-  (let ((out (if (equal current-prefix-arg nil)
-               (url-unhex-string str)
-               (url-unhex-string (url-unhex-string str)))))
-    (print out (current-buffer))))
+  (let* ((input-string
+         (if (use-region-p)
+             (buffer-substring-no-properties (region-beginning) (region-end))
+           str))
+        (unhexed (url-unhex-string (format "%s" input-string))))
+    (if (null current-prefix-arg)
+        (message unhexed)
+      (save-excursion
+        (if (use-region-p)
+            (goto-char (region-end)) nil)
+        (newline)
+      (print unhexed (current-buffer))))))
 
 (defun pulse-line (&rest _)
       "Pulse the current line."
