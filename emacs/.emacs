@@ -121,8 +121,7 @@
 
 (use-package dabbrev
   :bind ("M-/" . dabbrev-expand)
-  :config (setq dabbrev-case-fold-search t
-                dabbrev-case-fold-search nil))
+  :config (setq dabbrev-case-fold-search nil))
 
 (use-package vc-hooks :defer t :config (setq vc-follow-symlinks nil
                                              vc-make-backup-files t))
@@ -326,10 +325,7 @@
 (use-package erlang
   :defer t
   :defines whitespace-style whitespace-line-column
-  :bind (("C-<up>" . erlang-beginning-of-function)
-         (:map erlang-mode-map
-               ("TAB" . company-indent-or-complete-common)
-               ))
+  :bind (("C-<up>" . erlang-beginning-of-function))
   :mode (("\\.erl\\'" . erlang-mode)
          ("\\.hrl\\'" . erlang-mode))
   :config (add-hook 'erlang-mode-hook
@@ -468,11 +464,26 @@
          ("C-M-+" . default-text-scale-decrease)
          ("C-M-0" . default-text-scale-reset)))
 
+(use-package company
+  :defer 5
+  :diminish
+  :commands (company-mode company-indent-or-complete-common)
+  :hook (elisp-mode . company-mode)
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook erlang-mode-hook))
+    (add-hook hook #'(lambda ()
+                       (local-set-key (kbd "<tab>")
+                                      #'company-indent-or-complete-common)))))
+
+(use-package company-elisp
+  :after company
+  :config
+  (push 'company-elisp company-backends))
+
 (use-package company-dabbrev
+  :after company
   :config
   (setq company-dabbrev-downcase nil))
-
-(use-package company)
 
 (use-package org-bullets
   :ensure
@@ -483,21 +494,22 @@
 (use-package org
   :ensure
   :bind (("C-c c" . org-capture)
-         ("C-c $" . org-archive-subtree)
-         ("C-c /" . org-sparse-tree))
+         (:map org-mode-map
+               ("C-c c" . org-capture)
+               ("C-c $" . org-archive-subtree)
+               ("C-c /" . org-sparse-tree)))
   :config (defun read-and-insert-iso-date()
             (let* ((time (org-read-date nil t nil))
-                   (stamp (format-time-string "%y-%m-%d" time)))
+                   (stamp (format-time-string "%Y-%m-%d" time)))
               stamp))
   (setq org-startup-indented t
-                org-directory "~/org"
-                org-capture-templates '(("t" "TODO" entry
-                                         (file+headline "todo" "TODOs")
-                                         "* TODO %?\n")
-                                        ("s" "Session" plain
-                                         (file "session")
-                                         "%(read-and-insert-iso-date): %?"
-                                         :jump-to-captured 1))))
+        org-directory "~/org"
+        org-capture-templates '(("t" "TODO" entry
+                                 (file+headline "todo" "TODOs")
+                                 "* TODO %?\n")
+                                ("n" "NOTES" entry
+                                 (file+headline "notes" "Notes")
+                                 "* %?\n"))))
 
 (use-package doom-modeline
   :ensure t
