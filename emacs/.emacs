@@ -55,7 +55,8 @@
       kill-ring-max 1024
       bookmark-save-flag 1
       reb-re-syntax 'string
-      indent-tabs-mode nil)
+      indent-tabs-mode nil
+      use-dialog-box nil)
 
 (setq-default indent-tabs-mode nil)
 
@@ -72,7 +73,6 @@
 (column-number-mode t)
 (display-time)
 (savehist-mode t)
-
 (fset 'yes-or-no-p 'y-or-n-p)
 (set 'frame-title-format '(myltiple-frames "%f" ("" "%f")))
 (put 'narrow-to-region 'disabled nil)
@@ -104,9 +104,10 @@
   :defer t
   :bind ("C-c C-<SPC>" . comment-or-uncomment-region))
 
-(use-package conf-mode
-  :defer t
-  :mode  ("\\.tf$" . conf-mode))
+(use-package conf-mode :defer t)
+
+(use-package terraform-mode :defer t
+  :config (setq terraform-indent-level 4))
 
 (use-package funs
   :commands (x-settings
@@ -117,7 +118,8 @@
          ("C-x C-c" . ask-save-buffers-kill-terminal)
          ("C-,"     . scroll-up-one-line)
          ("C-."     . scroll-down-one-line)
-         ("<f11>"   . fm-full-screen-toogle)))
+         ("<f11>"   . fm-full-screen-toogle)
+         ("C-c d" . duplicate-line)))
 
 (use-package dabbrev
   :bind ("M-/" . dabbrev-expand)
@@ -136,8 +138,12 @@
   :ensure spacemacs-theme
   :init (load-theme 'spacemacs-light t))
 
-(use-package dired :defer)
+(use-package dired :defer
+  :bind (:map dired-mode-map
+             ("C-c C-p" . wdired-change-to-wdired-mode)))
+
 (use-package dired-x :after dired)
+(use-package wdired :after dired)
 (use-package hlinum :ensure t)
 
 (use-package compile
@@ -251,6 +257,8 @@
 (use-package lsp-haskell
   :after lsp-mode
   :config (setq lsp-modeline-diagnostics-enable t))
+(use-package yaml-mode
+  :mode ("\\.ymlt\\'" . yaml-mode))
 
 (use-package lsp-mode
   :init (setq lsp-keymap-prefix "C-c l"
@@ -280,7 +288,14 @@
                 )
   :config
   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  :commands lsp)
+  :commands lsp
+  :config
+  ;; ELP, added as priority 0 (> -1) so takes priority over the built-in one
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("elp" "server"))
+                    :major-modes '(erlang-mode)
+                    :priority 0
+                    :server-id 'erlang-language-platform)))
 
 (use-package flycheck
   :commands (flycheck-mode)
@@ -325,7 +340,7 @@
 (use-package erlang
   :defer t
   :defines whitespace-style whitespace-line-column
-  :bind (("C-<up>" . erlang-beginning-of-function))
+  :bind (("C-<up>" . erlang-beginning-of-function)) ;; seems to be added to the global key map. noticed this in haskell mode.
   :mode (("\\.erl\\'" . erlang-mode)
          ("\\.hrl\\'" . erlang-mode))
   :config (add-hook 'erlang-mode-hook
@@ -434,8 +449,8 @@
 (use-package projectile
   :defer 5
   :diminish
-  :config
-  (projectile-global-mode)
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :config (projectile-global-mode)
   (defun my-projectile-invalidate-cache (&rest _args)
     (projectile-invalidate-cache nil))
 
@@ -445,7 +460,7 @@
                    :after #'my-projectile-invalidate-cache)
        (advice-add 'magit-branch-and-checkout
                    :after #'my-projectile-invalidate-cache)))
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  ;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (setq projectile-enable-idle-timer t))
 
 (use-package counsel-projectile
@@ -511,6 +526,11 @@
                                  (file+headline "notes" "Notes")
                                  "* %?\n"))))
 
+
+(use-package recentf-mode
+  :init (recentf-mode 1)
+  :bind (("C-x C-r" . recentf-open-files)))
+
 (use-package doom-modeline
   :ensure t
   :disabled
@@ -523,6 +543,23 @@
   :config  (direnv-mode))
 
 (use-package git-timemachine)
+
+(use-package restclient
+  :defer
+  :mode ("\\.http\\'" . restclient-mode)
+  :config (setq restclient-log-request t))
+
+(use-package restclient-jq :after restclient)
+
+(use-package wgrep)
+
+(use-package wgrep-deadgrep :requires wgrep :after deadgrep)
+
+(use-package deadgrep
+  :requires wgrep-deadgrep
+  :bind (("<f7>"  . deadgrep)
+         :map deadgrep-mode-map
+         ("C-c C-p" . wgrep-change-to-wgrep-mode)))
 
 (add-hook 'after-init-hook
 	  (lambda ()

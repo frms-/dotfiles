@@ -3,6 +3,7 @@ xrdb -merge ~/.Xdefaults
 xsetroot -cursor_name left_ptr
 setxkbmap -option ctrl:nocaps
 nm-applet &
+flameshot &
 volumeicon &
 xscreensaver -nosplash &
 xbindkeys

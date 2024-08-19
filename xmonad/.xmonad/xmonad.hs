@@ -53,7 +53,12 @@ myInactiveBorderColor = myBgColor
 myBorderWidth = 2
 
 myWorkspaces :: [String]
-myWorkspaces = ["  1  ", "  2  ", "  3  ", "  4  ", "  5  ", "  6  ", "  7  ", "  8  ", "  9  ", "  0  ", "  +  "]
+myWorkspaces = [ "  1  ", "  2  "
+               , "  3  ", "  4  "
+               , "  5  ", "  6  "
+               , "  7  ", "  8  "
+               , "  9  ", "  0  "
+               , "  +  ", "  -  " ]
 
 myLayout = avoidStruts $ smartBorders layouts
   where
@@ -81,8 +86,9 @@ main = do p <- spawnPipe "xmobar"
                                                  , ppSep             = xmobarColor myHiddenWsFgColor "" " :: "
            }
          , normalBorderColor  = "#334455"
-         , focusedBorderColor = "#ff9900"
+         , focusedBorderColor = "#ff0000" -- "#ff9900
          , modMask = mod4Mask
+         , borderWidth = 2
          , workspaces = myWorkspaces
          , handleEventHook = docksEventHook
          , layoutHook = myLayout
@@ -90,9 +96,9 @@ main = do p <- spawnPipe "xmobar"
                                    , className =? "stalonetray" --> doIgnore
                                    , className =? "trayer"  --> doIgnore
                                    , className =? "Gimp"      --> doFloat
-                                   , className =? "sun-applet-Main" --> doFloat
-                                   , className =? "sun.applet.Main" --> doFloat
-                                   , className =? "sun-plugin-navig-motif-Plugin" --> doFloat
+                                   , className =? "Gnome-calculator" --> doCenterFloat
+                                   , className =? "sun.applet.Main" --> doCenterFloat
+                                   , className =? "sun-plugin-navig-motif-Plugin" --> doCenterFloat
                                    , className =? "Spotify" --> doShift "+" <+> doFloat
                                    ]
          , keys = \c -> mykeys c `M.union` keys def c
@@ -107,15 +113,11 @@ main = do p <- spawnPipe "xmobar"
                                                [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
                                                | (key, sc) <- zip [xK_w, xK_e, xK_r, xK_s] [0, 1, 2]
                                                , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]] ++
-                                               [ ((modm, k), windows $ W.greedyView i)
-                                               | (i, k) <- zip myWorkspaces workspaceKeys
-                                               ]
+                                               [ ((modm, k), windows $ W.greedyView i) | (i, k) <- zip myWorkspaces workspaceKeys ]
                                                ++
-                                               [ ((modm .|. shiftMask, k), windows $ W.shift i)
-                                               | (i, k) <- zip myWorkspaces workspaceKeys
-                                               ]
+                                               [ ((modm .|. shiftMask, k), windows $ W.shift i) | (i, k) <- zip myWorkspaces workspaceKeys ]
       -- , ((modMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
-      where workspaceKeys = [xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0, xK_plus]
+      where workspaceKeys = [xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0, xK_plus, xK_minus]
 -- | Like 'shorten', but truncate from the left instead of right.
 shortenLeft :: Int -> String -> String
 shortenLeft = shortenLeft' "..."

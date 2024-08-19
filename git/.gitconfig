@@ -6,18 +6,20 @@
 [core]
         editor = vim
         excludesfile = ~/.gitignore
+	hooksPath = dotfiles/git/hooks
 
 [alias]
         st = status
         ci = commit
         br = branch
+        f = fetch
         co = checkout
         # all new commits after you fetched, with stats, but excluding merges
         # Remove a file from the index: git unstage <file>
         unstage = reset HEAD --
         last = log -1 HEAD
-      	uc = reset HEAD~1
-	      lol = log --pretty=oneline
+        uc = reset HEAD~1
+        lol = log --pretty=oneline
         lod = log --decorate
 [push]
         default = tracking
@@ -31,6 +33,7 @@
 	enabled = true
 [user]
 	name = Fredrik Malmros
+        email = fredrik.malmros@klarna.com
 [url "git://github.com/ghc/packages-"]
 	insteadOf = git://github.com/ghc/packages/
 [url "http://github.com/ghc/packages-"]
@@ -45,3 +48,9 @@
 	templatedir = ~/.git-templates
 [pull]
 	rebase = false
+[merge]
+	conflictStyle = diff3
+[credential]
+	helper = /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
+[diff]
+	external = difft

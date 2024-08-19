@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -x
+
+# Redirect output to stderr.
+exec 1>&2
+
+PATTERN=qwerty
+matches=$(git grep --color --cached --ignore-case "$PATTERN")
+if [[ ! -z "$matches" ]];
+
+then
+    only_matching=$(grep --only-matching --ignore-case "$PATTERN" <<< "$matches")
+    # FIXME: need to massage `only_matching´ for it to look nice in case there are more then one match
+    cat <<EOF
+Error: Found pattern: $(tput bold; tput setaf 1)$only_matching$(tput sgr0).
+Remove before commiting
+
+EOF
+    echo -n "$matches"
+    exit 1
+fi
